@@ -1,0 +1,432 @@
+﻿@model InvoiceViewModel
+@using Newtonsoft.Json
+
+<form asp-controller="Invoice" asp-action="CreateExternalInvoice" method="post"  enctype="multipart/form-data" id="createExtInvoiceForm">
+
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+    <div class="container-fluid container-fluid-small">
+        <!-- body of bashboard -->
+        <div class="js-add-field">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-card">
+
+                        <div class="card-body px-0">
+                            <div class="header px-4 pb-3 d-flex justify-content-center align-items-center">
+                                <h5 class="card-title mb-0">Contracts Invoice</h5>
+                            </div>
+                            <div class="">
+
+                                <div class="form-body p-5">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Invoice Number</label>                                       
+                                            @Html.EditorFor(model => model.InvoiceDetails.invoicenumber, new { htmlAttributes = new { @class = "form-control" } })
+
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Invoice Date</label>
+                                            @Html.EditorFor(model => model.InvoiceDetails.invoicedate, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">VAT Registration Number</label><span asp-validation-for="InvoiceDetails.vatregistrationno" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.vatregistrationno, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Vendor ID</label><span asp-validation-for="InvoiceDetails.vendorcode" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.vendorcode, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">TIN</label><span asp-validation-for="InvoiceDetails.tin" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.tin, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Project Name</label><span asp-validation-for="InvoiceDetails.projectname" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.projectname, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Purchase Order Number</label>
+                                            @Html.EditorFor(model => model.InvoiceDetails.ponumber, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Contract Number</label>
+                                            @Html.EditorFor(model => model.InvoiceDetails.contractnumber, new { htmlAttributes = new { @class = "form-control" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Interest Rate</label>
+                                            @Html.EditorFor(model => model.InterestRate, new { htmlAttributes = new { @id = "interestrate", @class = "form-control" } })
+                                        </div>
+                                         <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Fees Rate</label>
+                                            @Html.EditorFor(model => model.FeesRate, new { htmlAttributes = new { @id = "feesrate", @class = "form-control" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Contract Duration (Days)</label>
+                                            @Html.EditorFor(model => model.InvoiceDetails.days, new { htmlAttributes = new { @id = "duration", @class = "form-control" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Name of Vendor</label>
+                                            @Html.EditorFor(model => model.InvoiceDetails.vendorname, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Phone Number of Vendor</label>
+                                            @Html.EditorFor(model => model.InvoiceDetails.vendorphoneno, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="inputEmail4">Address of Vendor</label>
+                                            @Html.TextAreaFor(model => model.InvoiceDetails.vendoraddress, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="SupportingDocument1">Upload Invoice</label>
+                                            &nbsp;<label style="color:red">*Allowed files- jpg,jpeg,png and pdf</label>
+                                            <div class="custom-file">
+                                                <input asp-for="SupportingDocument1" class="form-control custom-file-input" />
+                                                <label id="fileupload" class="custom-file-label">Choose File..</label>
+                                            </div>
+                                        </div>
+                       
+                                        <div class="form-group col-md-6">
+                                            <label asp-for="SupportingDocument2">Upload Additional Document</label>
+                                            &nbsp;<label style="color:red">*Allowed files- jpg,jpeg,png and pdf</label>
+                                            <div class="custom-file">
+                                                <input asp-for="SupportingDocument2" class="custom-file-input" />
+                                                <label id="fileupload" class="custom-file-label">Choose File..</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Dynamic Item list -->
+
+                                    <div id="invoiceItemsContainer">
+                                        @Html.EditorFor(model => model.Items)
+                                    </div>
+
+                                    <!-- end dynamic item list-->
+                                    <div class="row mb-5">
+                                        <div class="col-12">
+                                            <a href="#" id="btnAdd" class="link blue"
+                                               style="font-size: 16px;">
+                                                <img src="~/assets/images/plus-icon.png" />Add
+                                                New
+                                                Input Field
+                                            </a>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Applicable VAT Rate</label><span asp-validation-for="InvoiceDetails.vatrate" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.vatrate, new { htmlAttributes = new { @class = "form-control", @id = "vatrate" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Subtotal Excluding VAT Rate</label><span asp-validation-for="InvoiceDetails.totalexcludingvat" class="red">*</span>
+                                            @Html.EditorFor(model => model.totalexcludingvat, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "totalamtnovat" } })
+                                            @Html.HiddenFor(model => model.InvoiceDetails.totalexcludingvat, new { @id = "totalamtnovatnocomma" })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Total Amount Including VAT</label><span asp-validation-for="InvoiceDetails.totalincludingvat" class="red">*</span>
+                                            @Html.EditorFor(model => model.totalincludingvat, new { htmlAttributes = new { @class = "form-control", @id = "totalamount", @readonly = "readonly" } })
+                                            @Html.HiddenFor(model => model.InvoiceDetails.totalincludingvat, new { @id = "totalamountnocomma" })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Total Amount in Words</label> <span asp-validation-for="InvoiceDetails.totalamountinwords" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.totalamountinwords, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Bank Name</label><span asp-validation-for="InvoiceDetails.bankname" class="red">*</span>
+                                            @Html.DropDownListFor(model => model.InvoiceDetails.bankname, new SelectList(Model.Banks), "--- Select Bank ---", new { @class = "form-control", @id = "bankname" })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Account Number</label><span asp-validation-for="InvoiceDetails.accountnumber" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.accountnumber, new { htmlAttributes = new { @class = "form-control", @id = "accountno" } })
+                                        </div>
+
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Account Name</label><span asp-validation-for="InvoiceDetails.accountname" class="red">*</span>
+                                            @Html.EditorFor(model => model.InvoiceDetails.accountname, new { htmlAttributes = new { @class = "form-control", @id = "accountname", @readonly = "readonly" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-row col-md-3">
+                                        @Html.CheckBoxFor(model => model.requestdiscounting, new { @class = "form-control", @id = "chkrequestdisc" })
+                                        <label>Request for Discounting</label>
+                                    </div>
+                                    @{
+                                        var panelStyle = Model.requestdiscounting == true ? "" : "display:none";
+                                    }
+                                    <panel id="pnldiscounting" style="@panelStyle">
+                                        <div class="row" style="color:red; font-size:medium">
+                                            <b>Terms and Conditions:</b> &emsp;
+                                            @Html.Raw(@Model.TermsAndConditions)
+
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Eligible Amount</label>
+                                                @Html.EditorFor(model => model.LoanDetails.eligibleamount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "eligibleamt" } })
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Requested Amount</label>
+                                                @Html.EditorFor(model => model.LoanDetails.requestedamount, new { htmlAttributes = new { @class = "form-control", @id = "requestedamt" } })
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Interest</label>
+                                                @Html.EditorFor(model => model.LoanDetails.interest, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "interest" } })
+                                            </div>
+                                             <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Fees</label>
+                                                @Html.EditorFor(model => model.LoanDetails.fees, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "fees" } })
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Total Repayment</label>
+                                                @Html.EditorFor(model => model.LoanDetails.totalamount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "totalrepayment" } })
+
+                                            </div>
+                                        </div>
+                                    </panel>
+
+
+                                    <div class="row my-3 d-flex justify-content-center">
+                                        <div class="col-md-6">
+                                            <button class="my-primary primary-btn btn wid100">Submit</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--end of body-->
+    </div>
+</form>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change",
+                function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next('.custom-file-label').html(fileName);
+                });
+        });
+        $(".custom-file-input").on("change", function (e) {
+            console.log(this.files);
+            if (this.files.length > 0) {
+                var ext = this.files[0].type;
+                if (ext == "application/pdf" || ext == "image/jpg" || ext == "image/jpeg" || ext == "image/png") {
+
+                } else {
+                    swal("Invalid file extension. Kindly upload an allowed file extension.");
+                    this.files[0].File.val('');
+                }
+            }
+            
+        });
+        
+        $("#btnAdd").on('click', function () {
+            $.ajax({
+               // async: true,
+                data: $('#createExtInvoiceForm').serialize(),
+                url: '/Invoice/AddInvoiceItem',
+                type: 'POST',
+                success: function (partialView) {
+                    console.log(partialView);
+                    $('#invoiceItemsContainer').html(partialView);
+                }
+            });
+        });
+
+         $('#requestedamt').on('change', function () {
+                // confirm requested amount is not more than eligible amount
+             var eligibleamt = $('#eligibleamt').val();
+             var requestedamt = $('#requestedamt').val();
+             if (+requestedamt > +eligibleamt) {
+                 alert("You cannot request more than the eligible amount");
+                 $('#requestedamt').val('');
+                 return false;
+             } else {
+                 var requestedamt = $('#requestedamt').val();
+                 var interestrate = $('#interestrate').val();
+                 var duration = $('#duration').val();
+                 var feesrate = $('#feesrate').val();
+
+                 var interest = (+requestedamt * +interestrate * +duration) / (100 * 365);
+                 var fees = (+feesrate / 100) * +requestedamt
+
+                 $('#interest').val(interest.toFixed(2));
+                 $('#fees').val(fees.toFixed(2));
+
+                 var totalamt = +interest + +requestedamt + +fees;
+                 $('#totalrepayment').val(totalamt.toFixed(2));
+             }
+         });
+
+        $('#chkrequestdisc').on('change', function () {
+
+            if (!this.checked) {
+                $('#eligibleamt').val('');
+                $('#interest').val('');
+                $('#bankname').val('');
+                $('#fees').val('');
+
+                $('#pnldiscounting').hide();
+
+            } else {
+                var totalamt = $("#totalamountnocomma").val();
+                var accountno = $("#accountno").val();
+                if (accountno == '' || totalamt == 0) {
+                    swal("Account number and Total Amount are required to request for discouting");
+                    this.checked = false;
+                }
+                else {
+                    $.ajax({
+                        data: $('#createExtInvoiceForm').serialize(),
+                        url: '/Invoice/ValidateInvoiceDiscounting',
+                        type: 'POST',
+                        success: function (result) {
+                            if (result == null || result == "null") {
+                                $('#accountname').val('');
+                                $('#eligibleamt').val('');
+                                $('#interest').val('');
+                                $('#bankname').val('');
+                                $('#fees').val('');
+                                $('#chkrequestdisc').prop('checked', false);
+                                $('#pnldiscounting').hide();
+                                swal("Invalid account, hence unable to initiate loan request. Enter a valid Access bank account and try again");
+                                return false;
+                            } else {
+                                var jsonObj = jQuery.parseJSON(result);
+                                $('#accountname').val(jsonObj.AccountName);
+                                $('#eligibleamt').val(jsonObj.EligibleAmount.toFixed(2));
+                                $('#interest').val(jsonObj.Interest.toFixed(2));
+                                $('#fees').val(jsonObj.Fees.toFixed(2));
+                                $('#bankname').val("Access Bank Plc");
+
+                                $('#pnldiscounting').show();
+
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+        function InvoiceItemChange() {
+
+            var formdata = $("#createExtInvoiceForm").serializeArray();
+            var itemSum = 0;
+            var unitPrice = 0;
+            $(formdata).each(function (index, obj) {
+
+                if (obj.name.includes('UNITPRICE')) {
+                    unitPrice = obj.value
+
+                } else if (obj.name.includes('QUANTITY')) {
+                    var itemPrice = unitPrice * obj.value;
+                    itemSum += itemPrice;
+                }
+                
+            });
+            itemSum = itemSum.toFixed(2);
+            $('#totalamtnovat').val(addCommas(itemSum));
+            $('#totalamtnovatnocomma').val(itemSum);
+
+            //recalculate amount with vat
+            var vatrate = $('#vatrate').val();
+            if (vatrate == 0) {
+                $('#totalamountnocomma').val(itemSum);
+                $('#totalamount').val(addCommas(itemSum));
+            } else {
+                var vatamt = (vatrate / 100) * itemSum;
+                var total = +vatamt + +itemSum;
+                total = total.toFixed(2);
+                $('#totalamountnocomma').val(total);
+                $('#totalamount').val(addCommas(total));
+            }
+                      
+        }
+        $('#vatrate').on('change', function () {
+
+            var vatrate = $('#vatrate').val();
+            var totalamt = $('#totalamtnovatnocomma').val();
+            var vatamt = (vatrate / 100) * totalamt;
+
+            var total = +vatamt + +totalamt;
+            total = total.toFixed(2);
+            $('#totalamountnocomma').val(total);
+            $('#totalamount').val(addCommas(total));
+        });
+
+        $('#accountno').on('change', function () {
+
+            var accountno = $("#accountno").val();
+            if (accountno !== '') {
+
+                $.ajax({
+                    data: { accountNo: accountno },
+                    url: '/Invoice/ValidateAccount',
+                    type: 'GET',
+                    success: function (result) {
+                        console.log(result);
+                        if (result == null || result == "") {
+                            $('#accountname').val('');
+                             return false;
+                        } else {
+                            var jsonObj = jQuery.parseJSON(result);
+                            $('#accountname').val(jsonObj);
+                            $('#bankname').val("Access Bank Plc");
+                        }
+
+                    }
+                });
+            }
+        });
+
+        function addCommas(amt) {
+            var newAmt = amt.toString().replace(/,/g, "");
+            var parts = newAmt.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+       
+    </script>
+}
+
+
+

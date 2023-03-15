@@ -1,0 +1,230 @@
+﻿@model InvoiceViewModel
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+<div class="modal right fade show my-modal" id="right_modal" tabindex="-1" role="dialog" aria-labelledby="right_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header px-5">
+                <h5 class="modal-title">Invoice Number - @Model.InvoiceDetails.invoicenumber</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <img src="~/assets/images/close-icon.png" />
+                </button>
+            </div>
+            <div class="modal-body py-3 px-5">
+                <div class="invoice-section">
+                    <div class="contract-item">
+                        <h4>
+                            Vendor Name:
+                        </h4>
+                        <p>@Model.InvoiceDetails.vendorname</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Project Name:
+                        </h4>
+                        <p>@Model.InvoiceDetails.projectname</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Due Date:
+                        </h4>
+                        <p>@Model.InvoiceDetails.invoicedate</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Contract No:
+                        </h4>
+                        <p>@Model.InvoiceDetails.contractnumber</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            PO Number:
+                        </h4>
+                        <p>@Model.InvoiceDetails.ponumber</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Invoice Discounting
+                        </h4>
+
+                        @if (Model.InvoiceDetails.requestdiscounting == 1)
+                        {
+                            <p>Yes</p>
+                        }
+                        else
+                        {
+                            <p>No</p>
+                        }
+
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Status
+                        </h4>
+                        @if (Model.InvoiceDetails.invoicestatus == "PENDING")
+                        {
+                            <p class="text-warning">Pending</p>
+                        }
+                        else if (Model.InvoiceDetails.invoicestatus == "COMPLETED")
+                        {
+                            <p class="text-success">Completed</p>
+                        }
+                        else if (Model.InvoiceDetails.invoicestatus == "REJECTED")
+                        {
+                            <p class="text-danger">Rejected</p>
+                        }
+
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Authorizer's Comment:
+                        </h4>
+                        <p>@Model.InvoiceDetails.AUTHORIZERCOMMENT</p>
+                    </div>
+
+                </div>
+                <!-- Order Details Section -->
+                <h4 class="invoice-section-title pb-2 border-bottom">Order details</h4>
+                <div class="invoice-section">
+                    <table class="table  " style="position: static;">
+                        <thead>
+                            <tr>
+                                <th class="border-0">S/N</th>
+                                <th class="border-0">Description</th>
+                                <th class="border-0">Qty</th>
+                                <th class="border-0">Unit Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Items == null)
+                            {
+                                <tr colspan="4"></tr>
+                            }
+                            else
+                            {
+                                int i = 1;
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="border-top-0 border-bottom"> @i</td>
+                                        <td class="border-top-0 border-bottom"> @item.DESCRIPTION</td>
+                                        <td class="border-top-0 border-bottom">
+                                            @item.QUANTITY
+                                        </td>
+                                        <td class="border-top-0 border-bottom"> @item.UNITPRICE</td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+
+                    <div class="invoice-summary-wrapper">
+                        <div class="invoice-info">
+                            <div></div>
+                            <div class="invoice-info-item">
+                                <p class="mb-0"><strong>Subtotal : </strong></p>
+                                <p class="text-right"> @Model.InvoiceDetails.totalexcludingvat </p>
+                            </div>
+                        </div>
+
+                        <div class="invoice-info">
+                            <div></div>
+                            <div class="invoice-info-item">
+                                <p class="mb-0"><strong>VAT : </strong></p>
+                                <p class="text-right"> @Model.InvoiceDetails.vatrate </p>
+                            </div>
+                        </div>
+
+                        <div class="invoice-info">
+                            <div></div>
+                            <div class="invoice-info-item">
+                                <p class="mb-0"><strong>Total : </strong></p>
+                                <p class="text-right"> @Model.InvoiceDetails.totalincludingvat </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Payment Section -->
+                <h4 class="invoice-section-title pb-2 border-bottom">Payment Details</h4>
+
+                <div class="invoice-section">
+                    <div class="contract-item">
+                        <h4>
+                            Bank Name:
+                        </h4>
+                        <p> @Model.InvoiceDetails.bankname</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Account No:
+                        </h4>
+                        <p> @Model.InvoiceDetails.accountnumber</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Account Name:
+                        </h4>
+                        <p> @Model.InvoiceDetails.accountname</p>
+                    </div>
+                </div>
+
+                 @if(Model.InvoiceDetails.contractid == 0) // External Invoice Uploaded
+                    {
+                            <!-- Atachment Section -->
+                        <h4 class="invoice-section-title pb-2 border-bottom">Attachments</h4>
+                        @if (Model.InvoiceDetails.SUPPORTINGDOCUMENT1 != null)
+                        {
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <a href="@Url.Action("DownloadSupportingDocument1", "Invoice", new { id = Model.InvoiceDetails.id })" target="_blank">                                
+                                        <img src="~/assets/images/file-download-icon.png" title="Download File" />
+                                    </a>
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <img src="~/assets/images/text.png" width="30px" />
+                                    <label>Invoice Document</label>
+                                </div>
+                                   
+                            </div>
+                        }
+
+                        @if (Model.InvoiceDetails.SUPPORTINGDOCUMENT2 != null)
+                        {
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <a href="@Url.Action("DownloadSupportingDocument2", "Invoice", new { id = Model.InvoiceDetails.id })" target="_blank">                         
+                                        <img src="~/assets/images/file-download-icon.png" title="Download File" />
+                                    </a>
+                                </div>
+                                <div class="form-group col-md-8">
+                                    <img src="~/assets/images/text.png" width="30px" />
+                                    <label>Invoice Document2</label>
+                                </div>                             
+                            </div>
+                        }
+
+                    }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+        });
+
+</script>

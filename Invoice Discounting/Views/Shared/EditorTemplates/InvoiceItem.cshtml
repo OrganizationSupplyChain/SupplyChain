@@ -1,0 +1,20 @@
+﻿@model InvoiceItem
+
+<div class="row">
+
+    <div class="col-md-6 form-group">
+        <label>Unit Price<span class="red">*</span></label>
+        <input asp-for="UNITPRICE" type="text" class="form-control invoiceitem" onchange="InvoiceItemChange()"  style="color : #bbb" />
+    </div>
+    <div class="col-md-6 form-group">
+        <label>Quantity<span class="red">*</span></label>
+        <input asp-for="QUANTITY" type="text" class="form-control invoiceitem" onchange="InvoiceItemChange()" style="color : #bbb" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 form-group">
+        <label>Item Description<span class="red">*</span></label>
+        <textarea asp-for="DESCRIPTION" row="5" class="form-control"></textarea>
+    </div>
+</div>

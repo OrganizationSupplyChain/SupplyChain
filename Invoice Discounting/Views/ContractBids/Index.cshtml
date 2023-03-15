@@ -1,0 +1,162 @@
+﻿
+@model IEnumerable<VendorContractBidsDetails>
+@{
+    ViewData["Title"] = "Vendor Bids Management";
+}
+
+
+<div class="row mt-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div class="search-group">
+            <input type="text" style="width: 300px;" id="txtSearch" placeholder="search" class="form-control pl-5"
+                   aria-label="Text input with checkbox">
+            <i class="fa fa-search"></i>
+
+            <input type="text" style="width: 300px; display:none" id="txtSearch" placeholder="search" class="form-control pl-5"
+                   aria-label="Text input with checkbox">
+            <i class="fa fa-search"></i>
+        </div>
+        <div>
+        </div>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col-12">
+        <ul class="nav nav-tabs mb-4 border-bottom-0" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active tab-btn " id="all-vendors-tab" data-toggle="tab"
+                        data-target="#all-vendors" type="button" role="tab" aria-controls="all-vendors"
+                        aria-selected="true">
+                    All Vendor Bids
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="card my-card tab-pane active" id="all-vendors">
+                <div class="card-body px-0">
+                    <div class="header px-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Vendors Bids List</h5>
+                    </div>
+
+                    <div class="notif-wrapper p-4 notif-card " style="height: 55vh;">
+                        <table id="vendorTable" class="table example " style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Vendor Name</th>
+                                     <th>Contract Status</th>
+                                    <th>Contract Number</th>
+                                    <th>Contract Name</th>
+                                    <th>Coprorate Name</th>
+                                    <th>Corporate Id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int i = 1; }
+                                @if (Model.Count()==0)
+                                {
+                                    <tr>
+                                        <td colspan="9">No Record Found</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <label> @i </label>
+                                                @{ i++; }
+                                            </td>
+                                           <td>
+                                                @Html.DisplayFor(modelItem => item.VendorName)
+                                            </td>
+
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ResponseStatus)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ContractNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ContractName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CorporateName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.UniqueCorporateId)
+                                            </td>
+                                           
+                                            
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="cmodal"></div>
+@section Scripts
+	{
+    <script>
+        $(document).ready(function () {
+
+            $('#vendorTable').DataTable({
+                dom: 'lrtip',
+                order: [],
+                paging: true,
+                info: true,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        className: 'excel',
+                        text: '<i class="fas fa-file-excel"></i>',
+                        footer: true,
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                        titleAttr: 'PDF'
+                    }
+                ]
+            });
+
+            //$('#vendorTablePending').DataTable({
+            //    dom: 'lrtip',
+            //    order: [],
+            //    paging: true,
+            //    info: true
+            //});
+
+        });
+        
+        $('#txtSearch').on('keyup', function () {
+
+            var searchTxt = $("#txtSearch").val();
+            $('#vendorTable').DataTable().search(searchTxt).draw();
+        });
+    </script>
+}
+
+

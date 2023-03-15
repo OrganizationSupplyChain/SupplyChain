@@ -1,0 +1,99 @@
+﻿@model IEnumerable<CorporateBatchDetailsPending>
+@{
+    ViewData["Title"] = "AuthorizeCorporate";
+}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Authorize Corporate Details</h1>
+
+    <p><label style="color:red">@Html.TempData["authMessage"]</label></p>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Pending Bulk Corporate</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table class="table table-bordered" id="dataTable" width="100%" style="font-family:Calibri;font-size:14px" cellspacing="0">
+                    <thead>
+                        <tr style="background-color: lightgrey; color: black">
+                            <th></th>
+                            <th></th>
+                            <th>Corporate List</th>
+                            <th>Created By</th>
+                            <th>Date Initiated</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="width:120px">
+                                    @Html.ActionLink("Authorize", "Auth", new { id = item.ID }, new { @class = "auth" })
+
+                                </td>
+                                <td style="width: 120px">
+                                    @Html.ActionLink("View Corporate", "ViewUploadedExcel", new { id = item.ID }, new { @class = "view" })
+
+                                </td>
+
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.corporatebulk)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CREATEDBYNAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DATECREATED)
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal"></div>
+<div id="suppDocModal"></div>
+@section Scripts
+	{
+    <script>
+			$("a.auth").on('click', function () {
+				$.ajax({
+					url: this.href,
+					type: 'Get',
+					cache: false,
+					success: function (result) {
+						$('#myModal').html(result).find('.modal').modal({
+							show: true
+						});
+					}
+				});
+				return false;
+            });
+            $("a.view").on('click', function () {
+                $.ajax({
+                    url: this.href,
+                    type: 'Get',
+                    cache: false,
+                    success: function (result) {
+                        $('#suppDocModal').html(result).find('.modal').modal({
+                            show: true
+                        });
+                    }
+                });
+                return false;
+            });
+    </script>
+}
+
+
+
+
+

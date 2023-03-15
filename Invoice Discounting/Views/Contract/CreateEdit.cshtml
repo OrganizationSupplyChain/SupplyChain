@@ -1,0 +1,234 @@
+﻿@model ContractViewModel
+
+<form asp-controller="Contract" asp-action="CreateEditContract" method="post" id="frmcreateedit" >
+
+    <div class="container-fluid container-fluid-small">
+        <!-- body of bashboard -->
+        <div class="js-add-field">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-card">
+
+                        <div class="card-body px-0">
+                            <div class="header px-4 pb-3 d-flex justify-content-center align-items-center">
+                                @if (Model.UpdateType == "NEW")
+                                {
+                                    <h5 class="card-title mb-0">Create New Contract</h5>
+                                }
+                                else
+                                {
+                                    <h5 class="card-title mb-0">Edit Contract</h5>
+                                }
+
+                            </div>
+                            <div class="">
+
+                                <div class="form-body p-5">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Contract Number</label>
+                                            @Html.HiddenFor(model => model.Contract.ID)
+                                            @Html.HiddenFor(model => model.UpdateType)
+                                            @Html.EditorFor(model => model.Contract.CONTRACTNUMBER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">PO Number</label>
+                                            @Html.EditorFor(model => model.Contract.PONUMBER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="inputEmail4">Contract Name</label>
+                                            @Html.EditorFor(model => model.Contract.CONTRACTNAME, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="inputEmail4">Payment Tenor (Days)</label>
+                                            <span id="validatetenor" style="display:none; color:red">Payment Tenor must be greater than zero</span>
+                                            @Html.EditorFor(model => model.Contract.PAYMENTTENOR, new { htmlAttributes = new { @class = "form-control", @id = "paymenttenor" } })
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="inputEmail4">Contract Price</label>
+                                            @Html.EditorFor(model => model.Contract.ContractAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                            @*@Html.EditorFor(model => model.Contract.ContractAmount.ToString("{0:0.00}"), new { htmlAttributes = new { @class = "form-control" } })*@
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="form-row">
+
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Quality Specification</label>
+                                            @Html.TextAreaFor(model => model.Contract.QUALITYSPECIFICATION, new { @class = "form-control" })
+                                        </div>
+                                      
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Description</label>
+                                            @Html.TextAreaFor(model => model.Contract.DESCRIPTION, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Timeline (Days)</label>
+                                            <span id="validatetimeline" style="display:none; color:red">Timeline must be greater than zero</span>
+                                            @Html.EditorFor(model => model.Contract.TIMELINEDAYS, new { htmlAttributes = new { @class = "form-control", @id = "timeline" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Vendor Category</label>
+                                            @Html.DropDownListFor(model => model.Contract.VENDORCATEGORY, new SelectList(Model.VendorCategory, "Text", "Value"), new { @class = "form-control" })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Other Information</label>
+                                            @Html.TextAreaFor(model => model.Contract.OTHERINFORMATION, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Required Documents</label>
+                                            @Html.TextAreaFor(model => model.Contract.REQUIREDDOCUMENTS, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Initiator Name</label>
+                                            @Html.EditorFor(model => model.Contract.CREATEDBYNAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="inputEmail4">Date Initiated</label>
+                                            @Html.EditorFor(model => model.Contract.CREATEDDATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                    </div>                                   
+                                   
+                                    <div class="form-row">
+                                        @if (Model.UdfDetails != null)
+                                        {
+                                            @foreach (var udf in Model.UdfDetails)
+                                            {
+                                                if (udf.UDFTYPE == "Text")
+                                                {
+                                                    <div class="form-group col-md-6">
+                                                        <label for="inputEmail4"> @udf.UDFLABEL</label>
+                                                        <textarea row="5" class="form-control" readonly="readonly"></textarea>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="form-group col-md-6">
+                                                        <label>@udf.UDFLABEL</label>
+                                                        <div id="dZUpload" class="dropzone ng-dropzone">
+                                                            <div class="dz-default dz-message">
+                                                                <img src="~/assets/images/upload_file_icon.png.png" />
+                                                                <h3>
+                                                                    Drag and drop files here, or <a class="link blue"
+                                                                                                    href="#">browse</a>
+                                                                </h3>
+                                                            </div>
+                                                        </div>
+                                                        @*<span asp-validation-for="SupportingDoc" class="text-danger"></span>*@
+
+                                                    </div>
+                                                }
+                                            }
+                                        }
+
+                                    </div>
+                                    <div class="row mb-5">
+                                        <div class="col-12">
+                                            <a href="#" id="btnAdd" class="link blue"
+                                               style="font-size: 16px;">
+                                                <img src="~/assets/images/plus-icon.png" />Add
+                                                New
+                                                Input Field
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @*<div class="form-row">
+            <div class="form-group col-md-12">
+                <div id="dvUDFList">
+                    <partial name="_UDF" for="UdfDetails" />
+                </div>
+            </div>
+            <p></p>
+        </div>*@
+                                    <div class="tb-height-b15 tb-height-lg-b15"></div>
+
+                                    <div class="row my-3 d-flex justify-content-center">
+                                        <div class="col-md-6">
+                                            <button class="my-primary primary-btn btn wid100">Submit</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--end of body-->
+    </div>
+</form>
+<div id="udfmodal"></div>
+@section Scripts
+{
+    <script>
+        $("#btnAdd").on('click', function () {
+            console.log("Add clicked");
+            $.ajax({
+                // async: true,
+                data: $('#frmcreateedit').serialize(),
+                url: '/Contract/AddNewFields',
+                type: 'POST',
+                success: function (result) {
+                    $('#udfmodal').html(result).find('.modal').modal({
+                        show: true
+                    });
+                }
+            });
+            return false;
+        });
+        
+        $('#btnAddMain').on('click', function () {
+             var udfDetails = {};
+             var udfLbl = $("#udflbl").val();
+             var udfTyp = $("#udftyp").val();
+             console.log("Udf Label :: " + udfLbl + " :: udfType :: " + udfTyp);
+
+             $.ajax({
+                 url: "@Url.Action("AddUDF", "Contract")",
+                 type: 'Post',
+                 data: { UdfLabel: udfLbl, UdfType: udfTyp },
+                 cache: true,
+                 success: function (result) {
+                     console.log("UDF Response :: " + result);
+                     $("#dvUDFList").html(result);
+                 }
+             });
+             return false;
+         });
+
+        $('#timeline').on('change', function () {
+            var timelineVal = $('#timeline').val();
+            if (timelineVal < 1) {
+                $('#validatetimeline').show();
+                $('#timeline').val('');
+            } else {
+                $('#validatetimeline').hide();
+            }
+        });
+
+        $('#paymenttenor').on('change', function () {
+            var tenorVal = $('#paymenttenor').val();
+            if (tenorVal < 1) {
+                $('#validatetenor').show();
+                $('#paymenttenor').val('');
+            } else {
+                $('#validatetenor').hide();
+            }
+        });
+    </script>
+}
+
+

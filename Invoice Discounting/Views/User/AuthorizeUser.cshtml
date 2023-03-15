@@ -1,0 +1,104 @@
+﻿@model IEnumerable<UsersPending>
+@{
+	ViewData["Title"] = "AuthorizeUser";
+}
+<div class="container-fluid">
+
+	<!-- Page Heading -->
+	<h1 class="h3 mb-2 text-gray-800">Authorize User</h1>
+
+	<p><label style="color:red">@Html.TempData["authMessage"]</label></p>
+
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Pending User Details</h6>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+
+				<table class="table table-bordered" id="dataTable" width="100%" style="font-family:Calibri;font-size:14px" cellspacing="0">
+					<thead>
+                        <tr style="background-color:lightgrey; color:black">
+                            <th>UserName</th>
+                            <th>Email</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Status</th>
+                            <th>Vendor ID</th>
+                            <th>Initiator</th>
+                            <th>Date Initiated</th>
+                            <th></th>
+                        </tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.USERNAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EMAIL)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FIRSTNAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LASTNAME)
+                            </td>
+                            <td>
+                                @if (item.STATUS == 1)
+                                {
+                                    @Html.Label("ACTIVE")
+                                }
+                                else
+                                {
+                                    @Html.Label("DISABLED")
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VENDORID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.INPUTTERNAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CREATEDDATE)
+                            </td>
+                            <td style="width:120px">
+                                @Html.ActionLink("Authorize", "Auth", new { id = item.ID }, new { @class = "auth" })
+
+                            </td>
+                        </tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="myModal"></div>
+
+@section Scripts
+	{
+	<script>
+			$("a.auth").on('click', function () {
+				$.ajax({
+                    url: encodeURIComponent(this.href),
+					type: 'Get',
+					cache: false,
+					success: function (result) {
+						$('#myModal').html(result).find('.modal').modal({
+							show: true
+						});
+					}
+				});
+				return false;
+			});
+	</script>
+}
+
+
+
+
+

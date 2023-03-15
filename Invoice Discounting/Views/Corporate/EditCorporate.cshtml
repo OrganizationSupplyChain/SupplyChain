@@ -1,0 +1,204 @@
+﻿@model CorporateViewModel
+@{
+    Layout = "_Layout";
+}
+
+<form asp-controller="Corporate" asp-action="_EditCorporate" method="post" autocomplete="off">
+
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+
+    <div class="jumbotron page-wrapper py-5 px-0">
+        <div class="container-fluid container-fluid-small">
+            <!-- body of bashboard -->
+
+            <div class="js-add-field">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card my-card">
+                            <div class="card-body px-0">
+                                <div class="header px-4 pb-3 d-flex justify-content-center align-items-center">
+                                    <h5 class="card-title mb-0">Update Corporate of a User</h5>
+                                </div>
+                                <div class="row my-5">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <ul class="nav nav-tabs py-1 px-1 mb-4 border-bottom-0 box-tab justify-content-center"
+                                            id="myTab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link px-5 active tab-btn border-0"
+                                                        id="all-vendors-tab" data-toggle="tab" data-target="#single"
+                                                        type="button" role="tab" aria-controls="all-vendors"
+                                                        aria-selected="true">
+                                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path class="menu-icon" fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M2 0H12C13.1 0 14 0.9 14 2V12C14 13.1 13.1 14 12 14H2C0.9 14 0 13.1 0 12V2C0 0.9 0.9 0 2 0ZM7.57143 7.57143H10.4286C10.7429 7.57143 11 7.31429 11 7C11 6.68571 10.7429 6.42857 10.4286 6.42857H7.57143V3.57143C7.57143 3.25714 7.31429 3 7 3C6.68571 3 6.42857 3.25714 6.42857 3.57143V6.42857H3.57143C3.25714 6.42857 3 6.68571 3 7C3 7.31429 3.25714 7.57143 3.57143 7.57143H6.42857V10.4286C6.42857 10.7429 6.68571 11 7 11C7.31429 11 7.57143 10.7429 7.57143 10.4286V7.57143Z"
+                                                              fill="#9E9FA1" />
+                                                    </svg>
+                                                    UPDATE CORPORATE
+                                                </button>
+                                            </li>
+                                            @*<li class="nav-item  " role="presentation">
+                                                    <button class="nav-link px-5 tab-btn border-0" id="vendors-requests-tab"
+                                                            data-toggle="tab" data-target="#bulk" type="button" role="tab"
+                                                            aria-controls="vendors-requests" aria-selected="false">
+
+                                                        <svg width="14" height="20" viewBox="0 0 14 20" fill="none"
+                                                             xmlns="http://www.w3.org/2000/svg">
+                                                            <path class="menu-icon" fill-rule="evenodd" clip-rule="evenodd"
+                                                                  d="M2 6H12C13.1 6 14 6.9 14 8V18C14 19.1 13.1 20 12 20H2C0.9 20 0 19.1 0 18V8C0 6.9 0.9 6 2 6ZM7.57143 13.5714H10.4286C10.7429 13.5714 11 13.3143 11 13C11 12.6857 10.7429 12.4286 10.4286 12.4286H7.57143V9.57143C7.57143 9.25714 7.31429 9 7 9C6.68571 9 6.42857 9.25714 6.42857 9.57143V12.4286H3.57143C3.25714 12.4286 3 12.6857 3 13C3 13.3143 3.25714 13.5714 3.57143 13.5714H6.42857V16.4286C6.42857 16.7429 6.68571 17 7 17C7.31429 17 7.57143 16.7429 7.57143 16.4286V13.5714Z"
+                                                                  fill="#9E9FA1" />
+                                                            <path class="menu-icon"
+                                                                  d="M1 4.5H13C13 3.67 12.33 3 11.5 3H2.5C1.67 3 1 3.67 1 4.5Z"
+                                                                  fill="#9E9FA1" />
+                                                            <path class="menu-icon"
+                                                                  d="M2 1.5H12C12 0.67 11.33 0 10.5 0H3.5C2.67 0 2 0.67 2 1.5Z"
+                                                                  fill="#9E9FA1" />
+                                                        </svg>
+
+                                                        Bulk Creation
+                                                    </button>
+                                                </li>*@
+
+
+                                        </ul>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-content container" id="myTabContent">
+                                    <div id="bulk" class="tab-pane">
+                                        <div class="row justify-content-center">
+
+
+
+                                            <div class="col-md-6 form-group">
+
+                                                <div class="row mb-3">
+                                                    <div class="col-12 text-center">
+
+                                                        <button type="button" class="btn btn-outline-primary blue-outline-btn">
+                                                            Download Template <img src="~/assets/images/file-download-icon.png" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+                                                <div id="dZUpload" class="dropzone ng-dropzone">
+                                                    <div class="dz-default dz-message">
+                                                        <img src="~/assets/images/upload_file_icon.png.png" />
+                                                        <h3 class="mb-3">
+                                                            Drag and drop files here, or <a class="link blue" href="#">browse</a>
+                                                        </h3>
+                                                        <span class="p-2 grey-bg">CSV, XLS, XLSX</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row my-5 d-flex justify-content-center">
+                                                    <div class="col-md-12">
+                                                        <button class="my-primary primary-btn btn wid100">Submit</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="single" class="tab-pane active">
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label>Corporate Name <span class="red">*</span></label>
+                                                @Html.EditorFor(model => model.Corporate.CORPORATENAME, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.HiddenFor(model => model.Corporate.ID)
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Corporate Status<span class="red">*</span></label>
+
+                                                @Html.DropDownListFor(model => model.Corporate.STATUS, new List<SelectListItem>()
+                                                {
+                                                    new SelectListItem { Text="ACTIVE", Value="1"},
+                                                    new SelectListItem { Text="DISABLE", Value="0"},
+                                                }, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Principal Phone No<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Corporate.PRINCIPALEMAIL, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Principal Email<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Corporate.PRINCIPALPHONENO, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            
+                                            <div class="col-md-6 form-group">
+                                                <label>Principal Account No<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Corporate.PRINCIPALACCOUNTNO, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Interest Rate<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Corporate.INTERESTRATE, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                             <div class="col-md-6 form-group">
+                                                <label>Fees<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Corporate.FEESRATE, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Available Line of Credit<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Corporate.AVAILABLELINEOFCREDIT, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+
+                                            <div class="col-md-6 form-group ">
+                                                <label for="inputEmail4">Created By</label>
+                                                @Html.EditorFor(model => model.Corporate.CREATEDBYNAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label for="inputEmail4">Date Created</label>
+                                                @Html.EditorFor(model => model.Corporate.CREATEDDATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="row my-3 d-flex justify-content-center">
+                                            <div class="col-md-6">
+                                                <button type="submit" class="my-primary primary-btn btn wid100">Update</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--end of body-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    
+
+
+    <script>
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+	});
+    </script>
+</form>

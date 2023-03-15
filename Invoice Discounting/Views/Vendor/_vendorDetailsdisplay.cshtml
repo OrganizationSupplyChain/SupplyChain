@@ -1,0 +1,134 @@
+﻿@model VendorDetails
+
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+    <div class="modal right fade show my-modal" id="right_modal" tabindex="-1" role="dialog" aria-labelledby="right_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header px-5">
+                    <h5 class="modal-title">@Model.NAME</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="~/assets/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body py-3 px-5">
+                    <div class="contract-item">
+                        <h4>
+                            Vendor Name:
+                        </h4>
+                  
+                        <p>@Model.NAME</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Office Address:
+                        </h4>
+                        <p>@Model.ADDRESS</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Email Address:
+                        </h4>
+                        <p>
+                            @Model.EMAIL
+                        </p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Phone Number:
+                        </h4>
+                        <p>@Model.PHONENO</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Primary Account
+                            Number:
+                        </h4>
+                        <p>@Model.ACCOUNTNO</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Primary Bank:
+                        </h4>
+                        <p>@Model.BANK</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Alternate Phone
+                            Number:
+                        </h4>
+                        <p>@Model.PHONENO</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Alternate Email
+                            Address:
+                        </h4>
+                        <p>@Model.EMAIL</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Access Bank
+                            Account:
+                        </h4>
+                        <p>@Model.ACCOUNTNO</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            TIN:
+                        </h4>
+                        <p>@Model.TIN_RC</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Rec Number:
+                        </h4>
+                        <p>@Model.TIN_RC</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Unique Number:
+                        </h4>
+                        <p>@Model.TIN_RC</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Category:
+                        </h4>
+                        <p>@Model.CATEGORY</p>
+                    </div>
+                    
+                    <div class="contract-item">
+                        <h4>
+                            Nature Of Goods
+                            and Services:
+                        </h4>
+                        <p>@Model.CATEGORY</p>
+                    </div>
+                    
+                    <div class="contract-item">
+                        <h4>
+                            Date Created:
+                        </h4>
+                        <p>@Model.DATECREATED</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+	    });
+    </script>
+
