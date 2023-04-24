@@ -1,0 +1,102 @@
+﻿@model CreateRoleViewModel
+
+<form asp-controller="Role" asp-action="_Create" method="post" autocomplete="off">
+
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+    <link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Add New Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tb-card-body">
+                        <div class="tb-padd-lr-30 tb-alert-wrap">
+                            <div class="tb-height-b25 tb-height-lg-b25"></div>
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+                                    <label for="inputEmail4">Role Name</label>
+                                    @Html.EditorFor(model => model.Role.ROLENAME, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.HiddenFor(model => model.Role.ID)
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Role Status</label>
+                                    @Html.DropDownListFor(model => model.Role.STATUS, new List<SelectListItem>()
+                                  {
+                                       new SelectListItem { Text="ACTIVE", Value="1"},
+                                       new SelectListItem { Text="DISABLE", Value="0"},
+                                  }, new { @class = "form-control" })
+                                </div>
+
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+                                    <label for="inputEmail4">Module Access</label>
+                                    @*@Html.DropDownListFor(model => model.Role.MODULES, new MultiSelectList(Model.Modules), new { @class = "form-control", multiple = "multiple", @id = "multiModule1" })*@
+                                    @Html.DropDownListFor(model => model.Modules, new MultiSelectList(Model.Modules), new { @class = "form-control", multiple = "multiple", @id = "multiModule1" })
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="inputEmail4">Created By</label>
+                                    @Html.EditorFor(model => model.Role.CREATORNAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputEmail4">Created On</label>
+                                    @Html.EditorFor(model => model.Role.CREATEDDATE, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+
+                            </div>
+                            <div class="tb-height-b15 tb-height-lg-b15"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+        integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"
+        integrity="sha512-VQQXLthlZQO00P+uEu4mJ4G4OAgqTtKG1hri56kQY1DtdLeIqhKUp9W/lllDDu3uN3SnUNawpW7lBda8+dSi7w=="
+        crossorigin="anonymous"></script>
+<script src="app.js"></script>*@
+<script>
+		$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+			 jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+        });
+        $(function () {
+            $('#multiModule1').multiselect({
+                includeSelectAllOption: true
+            });
+        });
+
+</script>
+
+
+
+
+
+
+

@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model CorporateViewModel
+<form asp-controller="CoeporateBulkUpload" asp-action="_Create" enctype="multipart/form-data" method="post" autocomplete="off">
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Bulk Uploads</h1>
+
+        <p>
+            <label id="lblmsg" style="color: red">@Html.TempData["Message"]</label>
+        </p>
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Corporate Bulk Upload</h6>
+            </div>
+            <div class="card-body">
+                @*<div class="table-responsive">*@
+
+                <div class="form-group">
+                    <div class="form-row">
+                        <div asp-validation-summary="All" class="text-danger">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label for="inputEmail4">Status</label>
+                            @Html.DropDownListFor(model => model.Corporate.STATUS, new List<SelectListItem>{
+                                new SelectListItem() { Text = "ACTIVE", Value = "1" },
+                                new SelectListItem() { Text = "DISABLE", Value = "0" }
+                            }, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label asp-for="File">Corporate Upload</label>
+                            &nbsp;<label style="color:red">*Allowed files- excel</label>
+                            <div class="custom-file">
+                                <input asp-for="File" class="form-control custom-file-input" />
+                                <label id="fileupload" class="custom-file-label">Choose File..</label>
+                            </div>
+                            <span asp-validation-for="File" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div>
+                        <input type="submit" name="Proceed" id="btnSubmit" class="btn btn-primary" style="width:120px" />
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="button" value="Cancel" id="cancel" class="btn btn-dark" style="width:120px" />&nbsp;
+                        @*<label id="errorMsg" style="color:red;display:none">*Valid authorizer's NT username has to be provided.</label>
+                            <label id="errorMsg1" style="color:red;display:none">*Initiator and authorizer has to be in the same branch.</label>*@
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change",
+                function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next('.custom-file-label').html(fileName);
+                });
+        });
+    </script>
+}

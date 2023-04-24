@@ -1,0 +1,921 @@
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-Bold.woff2') format('woff2'),
+        url('/font/EffraCorp-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-BoldItalic.woff2') format('woff2'),
+        url('/font/EffraCorp-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-Light.woff2') format('woff2'),
+        url('/font/EffraCorp-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-LightItalic.woff2') format('woff2'),
+        url('/font/EffraCorp-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-Medium.woff2') format('woff2'),
+        url('/font/EffraCorp-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-MediumItalic.woff2') format('woff2'),
+        url('/font/EffraCorp-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-LightItalic.woff2') format('woff2'),
+        url('/font/EffraCorp-LightItalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-MediumItalic.woff2') format('woff2'),
+        url('/font/EffraCorp-MediumItalic.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-Medium.woff2') format('woff2'),
+        url('/font/EffraCorp-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Effra Corp';
+    src: url('/font/EffraCorp-Regular.woff2') format('woff2'),
+        url('/font/EffraCorp-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+.login-left {
+    background-image: url('/assets/images/login-bg.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-size: cover;
+}
+
+.login-left h3{
+    font-size: 50px;
+    color: #fff
+}
+
+body{
+    font-family: 'Effra Corp';
+    font-weight: light;
+}
+
+.light{
+    font-weight: 300;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.form-icon {
+    background-image: url('/assets/images/input-icon-bg.png');
+    color: #fff !important;
+    padding-top: 10px;
+    border: 0px
+}
+
+.form-control:active, .form-control:focus{
+    box-shadow: 0 0 0 0.2rem rgb(0, 56, 131, 0.5) !important;
+    border: 0px  !important;
+    border-color: #fff !important;
+}
+
+.submit-btn {
+    background-color: #003883;
+    border: 0px;
+    font-size: 15px;
+    width: 100%;
+}
+
+
+
+.show.flex-modal{
+    display: flex !important;
+}
+
+.my-modal.flex-modal .modal-dialog {
+    width: 700px;
+}
+
+.container-fluid-small{
+    max-width: 1200px;
+}
+
+ul[aria-multiselectable = "true"] .select2-results__option:before {
+    content: "";
+    display: inline-block;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    border: 2px solid #e9e9e9;
+    border-radius: 4px;
+    background-color: #fff;
+    margin-right: 20px;
+    vertical-align: middle;
+  }
+
+  ul[aria-multiselectable = "true"] .select2-results__option[aria-selected=true]:before {
+    font-family:fontAwesome;
+    content: "\f00c";
+    color: #fff;
+    background-color: #003883;
+    border: 0;
+    display: inline-block;
+    padding-left: 3px;
+  }
+
+.red{
+    color: red !important;
+}
+
+
+
+.radio-box label{
+    font-size: 14px;
+}
+
+.gradient-color{
+    background: -webkit-linear-gradient(90deg, #FF8200 17.19%, #FFC332 88.02%); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-text{
+    font-size: 20px;
+}
+
+.bg-white{
+    background-color: #fff !important;
+}
+
+textarea.ng-textarea{
+    height: 156px;
+}
+
+.active .menu-icon{
+    fill: #003883 !important;
+}
+
+.nav-item{
+    font-size: 14px
+}
+
+.nav-item svg{
+    margin-right: 15px;
+}
+
+.shadow-nav{
+    -webkit-box-shadow: 0px 6px 7px 0px rgba(241,241,241,1);
+    -moz-box-shadow: 0px 6px 7px 0px rgba(241,241,241,1);
+    box-shadow: 0px 6px 7px 0px rgba(241,241,241,1);
+}
+
+.nav-link.active{
+    border-bottom: 2px solid #003883;
+}
+
+.top-right-nav{
+    column-gap: 10px
+    ;
+}
+.border-2{
+    border-width: 2px !important;
+}
+
+.page-wrapper{
+    background-color: #fafcff;
+}
+
+.page-title{
+ 
+font-size: 20px;
+line-height: 24px;
+color: rgba(0, 22, 51, 1)
+}
+
+.my-card .card-title{
+    font-size: 16px;
+    line-height: 19px;
+    color: rgba(88, 89, 91, 1);
+
+}
+
+.my-card .header select{
+    background-color: transparent;
+    border: 0px;
+    font-size: 12px;
+    text-align: right;
+    color: rgba(0, 56, 131, 1);
+
+}
+
+.my-card .header a, .link{
+    font-size: 12px;
+    line-height: 14px;
+    text-align: right;
+    text-decoration-line: underline;
+    color: rgba(255, 130, 0, 1)
+}
+
+.blue.link{
+    color: #003883
+}
+.page-numbers .link{
+    font-size: 12px;
+
+}
+
+.page-numbers .disabled{
+    color: #9E9FA1;
+    text-decoration: none;
+}
+
+.search-group{
+    position: relative;
+}
+.search-group i{
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    color:#9E9FA1;
+}
+
+body{
+    font-size: 14px;
+}
+
+.text-danger {
+    color: #e74a3b !important;
+}
+
+a.text-danger:hover, a.text-danger:focus {
+    color: #be2617 !important;
+}
+
+.page-numbers .link.active{
+    background-color: #003883;
+    color: #fff;
+    border-radius: 3px;
+}
+
+table.dataTable.no-footer {
+    border-bottom: 1px solid #dee2e6;;
+}
+
+thead th
+{
+    border-bottom: 0px !important;
+    font-size: 16px !important;
+    color: #58595B !important;
+    font-weight: normal !important;
+}
+
+.table{
+    position: relative;
+    top: -30px;
+}
+
+.status{
+    width: fit-content;
+}
+
+.my-modal .modal-title{
+    font-size: 18px;
+    line-height: 22px;
+    color: #58595B;
+}
+
+.invoice-section thead th{
+    font-size: 14px !important;
+}
+
+.invoice-section-title{
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    color: #003883;
+}
+
+.invoice-info{
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+}
+
+.invoice-info-item{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: flex-end;
+}
+
+.contract-item h4{
+    font-style: italic;
+font-weight: bold;
+font-size: 16px;
+line-height: 19px;
+font-style: italic;
+color: #58595B;
+}
+
+.contract-item p{
+    font-size: 14px;
+line-height: 17px;
+row-gap: 20px;
+
+color: #58595B;
+}
+
+.wid100{
+    width: 100%;
+}
+.my-primary{
+    background-color: rgba(0, 56, 131, 1);
+    ;
+    color: #fff;
+}
+
+ #myTab .nav-item .tab-btn{
+    background: transparent;
+    border: 0px;
+    border-bottom: 2px solid #BFC0C1;
+    font-size: 18px;
+
+}
+
+#myTab .nav-item .tab-btn.active{
+    
+    border-bottom: 2px solid  rgba(0, 56, 131, 1);
+    color : rgba(0, 56, 131, 1);
+}
+
+
+.contract-item{
+    display: grid;
+    grid-template-columns: 3fr 4fr;
+    margin-bottom: 15px;
+}
+
+.dataTables_length{
+    display: none;
+}
+
+#example_wrapper div:nth-child(){
+    display: none;
+}
+
+td a.link{
+    font-size: 14px;
+}
+
+td{
+    font-size: 14px;
+    color: #58595B;
+}
+
+.blue-outline-btn{
+    border-color: #003883;
+    color: #003883;
+    border-width: 2px;
+}
+
+.orange-outline-btn{
+    border-color: #BE1414;;
+    color: #BE1414;;
+    border-width: 2px;   
+}
+table.dataTable>thead .sorting:before, table.dataTable>thead .sorting_asc:before, table.dataTable>thead .sorting_desc:before, table.dataTable>thead .sorting_asc_disabled:before, table.dataTable>thead .sorting_desc_disabled:before {
+    right: 1em;
+    content: "";
+}
+
+table.dataTable>thead .sorting:after, table.dataTable>thead .sorting_asc:after, table.dataTable>thead .sorting_desc:after, table.dataTable>thead .sorting_asc_disabled:after, table.dataTable>thead .sorting_desc_disabled:after {
+    right: .5em;
+    content: "";
+}
+.page-numbers{
+    column-gap: 10px;
+}
+.breadcrumb{
+    background-color: transparent;
+}
+
+.breadcrumb .active{
+    font-size: 12px;
+    position: relative;
+    top:5px
+}
+
+.pagination-text{
+    font-size: 14px;
+line-height: 17px;
+color: #9E9FA1;
+}
+
+.my-card .header{
+    border-bottom: 1px solid rgba(230, 231, 232, 1);
+}
+
+.notif-item{
+    display: grid;
+    grid-template-columns: 15px 10fr 2fr;
+    align-items: flex-start;
+    box-shadow: 0px 4px 12px rgba(48, 48, 48, 0.06);
+border-radius: 4px;
+margin-bottom: 20px;
+}
+
+.notif-item img{
+    margin-top: 3px;
+}
+
+.notif-title{
+    font-size: 14px;
+    line-height: 17px;
+    color: #58595B;
+}
+
+.notif-item .time{
+    font-size: 12px;
+line-height: 14px;
+text-align: right;
+color: #001633;
+font-weight: bold;
+}
+.notif-subtitle{
+    font-size: 14px;
+    line-height: 17px;  
+    color: #9E9FA1;
+}
+
+
+.icon-body{
+    column-gap: 20px;
+}
+
+.icon-body img{
+    width: 60px;
+    height: auto;
+}
+
+.icon-body .card-values h3{
+    font-size: 28px;
+    line-height: 34px;
+    color: rgba(0, 22, 51, 1);
+    margin-bottom: 30px;
+
+}
+
+.icon-body .card-values p{
+    font-size: 16px;
+    line-height: 19px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.my-card{
+    width: 100%;
+}
+
+.notif-card{
+    overflow-y: scroll;
+    padding-bottom: 20px;
+}
+
+.notif-card::-webkit-scrollbar {
+    display: none;
+  }
+
+  canvas{
+
+    width:200px !important;
+    height:200px !important;
+  
+  }
+
+  canvas.bar-chart{
+      width: 100% !important;
+  }
+
+  .pie-text p{
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+      color: #58595B;
+
+  }
+
+  .pie-text h3{
+    font-size: 28px;
+    line-height: 34px;
+    color: #001633;
+  }
+
+  .chart-area{
+      column-gap: 30px;
+  }
+
+
+  /** ng fomr **/
+  
+.form-control:active, .form-control:focus{
+    box-shadow: 0 0 0 0.2rem rgb(0, 56, 131, 0.5) !important;
+    border: 0px  !important;
+    border-color: #fff !important;
+}
+
+.input-footer{
+    font-size: 10px  !important;
+    
+}
+
+.select2-selection--single{
+    height: calc(1.5em + .75rem + 2px) !important;
+    display: flex !important;
+    align-items: center!important;
+    border-color: #ced4da !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    
+   
+    border-color: #fff  !important;
+    
+   
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b::before{
+    font: normal normal normal 14px/1 FontAwesome;
+    float: left !important;
+    content: "\f078";
+    padding: 5px;
+    position: relative;
+    right: 20px;
+    bottom: 10px;
+    color: #043B85;
+}
+
+.select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b::before{
+   
+    content: "\f077";
+    bottom: 8px;
+}
+
+
+
+.select2-container *:focus {
+    outline: none;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #001E5A !important;
+    color: #fff; 
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: transparent !important;
+    opacity: 0;
+    position: relative;
+    z-index: 10;
+    left:23px ;
+
+    
+  }
+
+  input[type="date"]::after{
+
+    font: normal normal normal 14px/1 FontAwesome;
+    float: left !important;
+    content: "\f073";
+    padding: 5px;
+    position: relative;
+    
+    
+    color: #043B85;
+
+  }
+
+  
+
+  .form-control{
+      background-color: #fff !important;
+  }
+
+  .ng-dropzone h3{
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #001633;
+  }
+
+  .ng-dropzone a{
+      font-weight: bold;
+      font-size: 19px;
+  }
+
+  .select2-container--default .select2-selection--single {
+    
+    background: transparent !important;
+}
+
+label, .form-group span, p{
+    color:  #58595B;
+    font-size: 16px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #58595B;
+    
+}
+
+
+.error-message-box{
+    background-color: #FCDCD9;
+    border-radius: 5px;
+}
+
+
+.ng-dropzone{
+    border: 1px dashed #BFC0C1;
+    border-radius: 6px;
+}
+
+.error-message-box p{
+    color : #EE4737;
+    font-weight: bold;
+}
+
+input.error{
+    border-color:#EE4737;
+}
+
+
+/** radio button switch **/
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 25px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #64BC26;;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #64BC26;;
+  }
+
+  
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .box-tab{
+      background-color: #ECEDEE;
+  }
+
+  .box-tab button.active{
+      background-color: #fff !important;
+  }
+
+  .grey-bg{
+      background-color: #eff0f0;
+  }
+
+  .delete-modal p{
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    color: #001129;
+
+  }
+
+  .check-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+
+  .check-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .check-container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .check-container input:checked ~ .checkmark {
+    background-color: #003883;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .check-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .check-container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+
+
+
+/* Customize the label (the container) */
+.radio-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default radio button */
+  .radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom radio button */
+  .radio-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border-radius: 50%;
+    border-color: #E6E7E8;
+    border-width: 1px;
+    border-style: solid;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .radio-container:hover input ~ .radio-checkmark {
+    background-color: transparent;
+    border-color : #E6E7E8;
+  }
+  
+  /* When the radio button is checked, add a blue background */
+  .radio-container input:checked ~ .radio-checkmark {
+    background-color: transparent;
+    border-color: #003883
+  }
+  
+  /* Create the indicator (the dot/circle - hidden when not checked) */
+  .radio-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the indicator (dot/circle) when checked */
+  .radio-container input:checked ~ .radio-checkmark:after {
+    display: block;
+  }
+  
+  /* Style the indicator (dot/circle) */
+  .radio-container .radio-checkmark:after {
+    top: 4px;
+    left: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #003883;
+  }

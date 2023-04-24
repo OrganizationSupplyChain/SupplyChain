@@ -1,0 +1,186 @@
+﻿@model VendorContractListModel
+
+<form asp-controller="ContractResponse" asp-action="ContractDetailsRedirect" id="frmcontractresponse" method="post" autocomplete="off">
+
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+    <div class="modal right fade show my-modal" id="right_modal" tabindex="-1" role="dialog" aria-labelledby="right_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header px-5">
+                    <h5 class="modal-title">Contract Number - @Model.CONTRACTNUMBER</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="~/assets/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body py-3 px-5">
+                    <div class="contract-item">
+                        <h4>
+                            Name of Item:
+                        </h4>
+                        @Html.HiddenFor(model => model.ID)
+                        @Html.HiddenFor(model => model.CONTRACTSTATUS)
+                        <p>@Model.CONTRACTNAME</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Quality:
+                        </h4>
+                        <p>@Model.QUALITYSPECIFICATION</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Contract Amount:
+                        </h4>
+                        <p>@Model.CONTRACTAMOUNT</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Description:
+                        </h4>
+                        <p>
+                            @Model.DESCRIPTION
+                        </p>
+                    </div>
+                   <div class="contract-item">
+                        <h4>
+                            Client
+                        </h4>
+                        <p>@Model.CORPORATENAME</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Other Information:
+                        </h4>
+                        <p>@Model.OTHERINFORMATION</p>
+                    </div>
+                    @*<div class="contract-item">
+            <h4>
+                Start Date:</h4>
+                <p>@Model.dat</p>
+        </div>*@
+                    <div class="contract-item">
+                        <h4>
+                            Timeline for
+                            Fulfilment:
+                        </h4>
+                        <p>@Model.TIMELINEDAYS</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Payment Tenor:
+                        </h4>
+                        <p>@Model.PAYMENTTENOR</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Required
+                            Documents:
+                        </h4>
+                        <p>@Model.REQUIREDDOCUMENTS</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Contract Number:
+                        </h4>
+                        <p>@Model.CONTRACTNUMBER</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            PO Number:
+                        </h4>
+                        <p>@Model.PONUMBER</p>
+                    </div>
+                    @if (Model.CONTRACTSTATUS == "Awarded")
+                    {
+                        <div class="contract-item">
+                            <h4>
+                                Status:
+                            </h4>
+                            <p class="text-success">Awarded</p>
+                        </div>
+                    }
+                    else if (Model.CONTRACTSTATUS == "Rejected")
+                    {
+                        <div class="contract-item">
+                            <h4>
+                                Status:
+                            </h4>
+                            <p class="text-danger">Rejected</p>
+                        </div>
+                    }
+                    else if (Model.CONTRACTSTATUS == "Completed")
+                    {
+                        <div class="contract-item">
+                            <h4>
+                                Status:
+                            </h4>
+                            <p class="text-info">Completed</p>
+                        </div>
+                    }
+                    else if (Model.CONTRACTSTATUS == "Pending")
+                    {
+                        <div class="contract-item">
+                            <h4>
+                                Status:
+                            </h4>
+                            <p class="text-primary">Pending Approval</p>
+                        </div>
+                    }
+                    else if (Model.CONTRACTSTATUS == "Declined")
+                    {
+                        <div class="contract-item">
+                            <h4>
+                                Status:
+                            </h4>
+                            <p class="text-danger">Declined</p>
+                        </div>
+                    }
+
+                </div>
+
+                @if (Model.CONTRACTSTATUS == "Awarded")
+                {
+                    <div class="modal-footer modal-footer-fixed border-top-0">
+                        <button type="submit" class="btn btn-primary my-primary wid100">Raise Invoice</button>
+                    </div>
+                }
+                else if (Model.CONTRACTSTATUS == "New")
+                {
+                    <div class="modal-footer modal-footer-fixed border-top-0 d-flex justify-content-center" style="column-gap: 30px;">
+
+                        <button type="submit" class="btn btn-primary my-primary btn-sm" style="width: 128px;">Apply</button>
+                        <button type="button" data-dismiss="modal" id="btndecline" class="btn btn-outline-primary orange-outline-btn btn-sm" style="width: 128px;">Decline</button>
+                            
+                    </div>
+                }
+                    </div>
+                </div>
+        </div>
+
+    <script>
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+        });
+
+        $("#btndecline").on('click', function () {
+           // $("#myModal").modal('hide');
+            //$("#cmodal").modal('hide');
+            $.ajax({
+                url: '/ContractResponse/ContractResponseDecined',
+                data: $('#frmcontractresponse').serialize(),
+                type: 'POST',
+                success: function (result) {
+
+                    location.reload();
+                    return true;
+                }
+            });
+        });
+    </script>
+</form>

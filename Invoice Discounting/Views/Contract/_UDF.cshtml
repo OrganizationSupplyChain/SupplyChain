@@ -1,0 +1,92 @@
+﻿@model List<UDFDetails>
+
+<div>
+   
+    <table id="udfList" class="table table-bordered table-hover">
+        <thead>
+            <tr style="background-color:lightgrey; color:black">
+                
+                <th>User Defined Label</th>
+                <th>User Defined Type</th>
+                <th style="width:30px">
+                    
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                <tr>
+                    <td></td>
+                    <td>No record found</td>
+                </tr>
+            }
+            else
+            {
+                for (int i = 0; i < Model.Count(); i++)
+                {
+                    {
+                        Html.ViewData.TemplateInfo.HtmlFieldPrefix = "UdfDetails";
+                    }
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(m => m[i].UDFLABEL, new { @id = "udflabel" })
+                                @Html.HiddenFor(m => m[i].ID)
+                                @Html.HiddenFor(m => m[i].CONTRACTID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m=>m[i].UDFTYPE, new { @id = "udflabel" })
+                            </td>
+                            <td>
+                                @Html.ActionLink("Delete","DeleteUdf","Contract", new { udfLabel = Model[i].UDFLABEL, udfType = Model[i].UDFTYPE, id = Model[i].ID })
+                            </td>
+                        </tr>
+                }
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+<script>
+    $('#udfList').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": false,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+
+        // Handle click on "Add" button
+    $('#btnAdd').on('click', function () {
+       // preventDefault();
+        var udfLabel = $("#udflabel").val();
+        var udfType = $("#udftype").val();
+        console.log("Udf Label :: " + udfLabel + " :: udfType :: " + udfType);
+     
+        $.ajax({
+            url: "@Url.Action("AddUDF", "Contract")",
+            type: 'Post',
+            data: { udfLabel: udfLabel, udfType: udfType},
+            cache: true,
+            success: function (result) {
+                console.log("UDF Response :: " + result);
+                return true;
+            }
+        });
+
+        @*$.ajax({ string udfLabel, string udfType
+                            url: "@Url.Action("ReturnAppListPartialView", "Deactivate")",
+                            type: "POST",
+                             data: { activeApps: json.RegisteredAppList },
+                            success: function (data) {
+                                $("#dvRegAppList").html(data);
+                            },
+                        });*@
+        return false;
+        });
+
+</script>

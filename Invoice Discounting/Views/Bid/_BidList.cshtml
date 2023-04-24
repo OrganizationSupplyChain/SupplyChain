@@ -1,0 +1,110 @@
+﻿@model IEnumerable<BidModel>
+
+
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions {
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    } <div id="view-issue" class="modal fade view-issue" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">Bid List</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tb-card-body">
+                        <div class="tb-padd-lr-30 tb-alert-wrap">
+                            <div class="table-responsive">
+
+                                <table id="invoicediscountingTable" class="table  example" style="width:100%">
+                                    <thead style="text-align:left">
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>Invoice Number</th>
+                                            <th>Investor Name</th>
+                                            <th>Loan Amount</th>
+                                            <th>Interest Rate</th>
+                                            <th>Bid Date</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int j = 1;
+                                        }
+                                        @if (Model == null || Model.Count() == 0)
+                                        {
+                                            <tr>
+                                                <td colspan="6">No Record Found</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <label> @j </label>
+                                                        @{
+                                                            j++;
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.INVOICENUMBER)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.INVESTORNAME)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.LOANAMOUNT)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.INTERESTRATE)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ADDDATETIME)
+                                                    </td>
+                                                    <td>
+                                                        @Html.ActionLink("Accept Bid", "AcceptBid", new { bidId = item.ID, loanId = item.LOANID, invoiceId = item.INVOICEID}, new { @class = "link blue auth", @id = "lnkacceptbid" })
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+        });
+
+        $("a.auth").on('click', function () {
+            $.ajax({
+                url: this.href,
+                type: 'Get',
+                cache: false,
+                success: function (result) {
+                    $('#myModal').html(result).find('.modal').modal({
+                        show: true
+                    });
+                }
+            });
+            return false;
+        });
+
+    </script>
+
+

@@ -1,0 +1,105 @@
+﻿@model IEnumerable<BidViewModel>
+@{
+    ViewData["Title"] = "Loan Bid";
+}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Available Loan Requests</h1>
+
+  @*  <p><label style="color:red">@Html.TempData["authMessage"]</label></p>*@
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Pending Corporate</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <table id="invoicediscountingTable" class="table  example" style="width:100%">
+                    <thead style="text-align:left">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Invoice Number</th>
+                            <th>Vendor Name</th>
+                            <th>Project Name</th>
+                            <th>Project Amount</th>
+                            <th>Loan Amount</th>
+                            <th>Requested Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int j = 1;
+                        }
+                        @if (Model == null || Model.Count() == 0)
+                        {
+                            <tr>
+                                <td colspan="8">No Record Found</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <label> @j </label>
+                                        @{
+                                            j++;
+                                        }
+                                    </td>
+                                  <td>
+                                        @Html.DisplayFor(modelItem => item.invoicenumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VendorName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProjectName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.totalamount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.requestedamount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.daterequested)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Place Bid", "PlaceBidModal", new { loanId = item.id }, new { @class = "link blue auth", @id = "lnkplacebid" })
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal"></div>
+
+@section Scripts
+    {
+    <script>
+        $("a.auth").on('click', function () {
+            $.ajax({
+                url: this.href,
+                type: 'Get',
+                cache: false,
+                success: function (result) {
+                    $('#myModal').html(result).find('.modal').modal({
+                        show: true
+                    });
+                }
+            });
+            return false;
+        });
+    </script>
+}
+
+

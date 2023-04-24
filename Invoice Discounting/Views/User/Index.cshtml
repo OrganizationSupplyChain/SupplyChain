@@ -1,0 +1,314 @@
+﻿@model UserPendingApproveModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="row mt-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div class="search-group" id="dvallusers">
+            <input type="text" style="width: 300px;" placeholder="search" id="txtallusers" class="form-control pl-5"
+                   aria-label="Text input with checkbox">
+            <i class="fa fa-search"></i>
+        </div>
+        <div class="search-group" id="dvuserrequest" style="display:none">
+            <input type="text" style="width: 300px;" placeholder="search" id="txtuserrequest" class="form-control pl-5"
+                   aria-label="Text input with checkbox">
+            <i class="fa fa-search"></i>
+        </div>
+        <div>
+
+            <div>
+                <button type="button" class="btn btn-outline-primary blue-outline-btn" id="lnkCreate">
+                    Create New <img src="~/assets/images/plus-icon.png" />
+                </button>
+
+                @*<button type="button" class="btn btn-outline-primary blue-outline-btn">
+                    Download Data <img src="~/assets/images/file-download-icon.png" />
+                </button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col-12">
+        <ul class="nav nav-tabs mb-4 border-bottom-0" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active tab-btn " id="all-users-tab" data-toggle="tab"
+                        data-target="#all-users" type="button" role="tab" aria-controls="all-users"
+                        aria-selected="true">
+                    All Users
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link tab-btn" id="user-requests-tab" data-toggle="tab"
+                        data-target="#user-requests" type="button" role="tab"
+                        aria-controls="user-requests" aria-selected="false">
+                    New User Request
+                </button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="card my-card tab-pane active" id="all-users">
+                <div class="card-body px-0">
+                    <div class="header px-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Users List</h5>
+
+                    </div>
+
+                    <div class="notif-wrapper p-4 notif-card " style="height: 55vh;">
+                        <table id="users" class="table example " style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>UserName</th>
+                                    <th>Email</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Initiator</th>
+                                    <th>Date Initiated</th>
+                                    <th>Status</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int i = 1; }
+                                @if (Model.userapproved == null)
+                                {
+                                    <tr>
+                                        <td colspan="8">No Record Found</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model.userapproved)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <label> @i </label>
+                                                @{ i++; }
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink(item.USERNAME, "ViewUserDetailsModal", new { userId = item.ID }, new { @class = "link blue", @id = "lnkcontract" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.EMAIL)
+                                            </td>
+
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FIRSTNAME)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LASTNAME)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.INPUTTERNAME)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.CREATEDDATE)
+                                            </td>
+                                            <td>
+                                                <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
+                                            
+                                            <td>
+                                               <a href="@Url.Action("ModifyUser", "User", new { id = item.ID })" class="edit">
+                                                    <img src="~/assets/images/edit.png" class="mr-2">
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                    
+                </div>
+            </div>
+
+
+            <div class="card my-card tab-pane" id="user-requests">
+                <div class="card-body px-0">
+                    <div class="header px-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Users Requested</h5>
+
+                    </div>
+
+                    <div class="notif-wrapper p-4 notif-card " style="height: 55vh;">
+
+                        <table id="userrequests" class="table  example" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>UserName</th>
+                                    <th>Email</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Initiator</th>
+                                    <th>Date Initiated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int j = 1; }
+                                @if (Model.userpending == null)
+                                {
+                                    <tr>
+                                        <td colspan="8">No Record Found</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model.userpending)
+                                    {
+                            <tr>
+                                <td>
+                                    <label> @j </label>
+                                    @{ j++; }
+                                </td>
+                                <td>
+                                    @Html.ActionLink(item.USERNAME, "ViewUserDetailsApprovalModal", new { userId = item.ID }, new { @class = "link blue", @id = "lnkviewuser" })
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EMAIL)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FIRSTNAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LASTNAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.INPUTTERNAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CREATEDDATE)
+                                </td>
+
+                            </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="editModal"></div>
+<div id="detailsModal"></div>
+<div id="cmodal"></div>
+<div id="userviewmodal"></div>
+@section Scripts
+	{
+    <script>
+        $(document).ready(function () {
+
+            $('#userrequests').DataTable({
+                dom: 'lrtip',
+                order: [],
+                paging: true,
+                info: true
+            });
+            $('#users').DataTable({
+                dom: 'lrtip',
+                order: [],
+                paging: true,
+                info: true,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        className: 'excel',
+                        text: '<i class="fas fa-file-excel"></i>',
+                        footer: true,
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                        titleAttr: 'PDF'
+                    }
+                ]
+            });
+
+        });
+        
+        //$("a.edit").on('click', function () {
+        //    $.ajax({
+        //        url: this.href,
+        //        type: 'Get',
+        //        cache: true,
+        //        success: function (result) {
+        //            $('#editModal').html(result).find('.modal').modal({
+        //                show: true
+        //            });
+        //        }
+        //    });
+        //    return false;
+        //});
+        
+        $("a.link").on('click', function () {
+            $.ajax({
+                url: this.href,
+                type: 'Get',
+                cache: true,
+                success: function (result) {
+                    $('#userviewmodal').html(result).find('.modal').modal({
+                        show: true
+                    });
+                }
+
+            });
+            return false;
+        });
+
+        $("#lnkCreate").on('click', function () {
+            window.location.href = '@Url.Action("_AddUser", "User")';           
+        });
+
+        $('#txtallusers').on('keyup', function () {
+
+            var searchTxt = $("#txtallusers").val();
+            $('#users').DataTable().search(searchTxt).draw();
+        });
+
+        $('#txtuserrequest').on('keyup', function () {
+
+            var searchTxt = $("#txtuserrequest").val();
+            $('#userrequests').DataTable().search(searchTxt).draw();
+        });
+
+        $('button[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+            var target = $(e.target).attr("data-target"); // activated tab
+            if (target == "#user-requests") {
+                $("#dvuserrequest").show();
+                $("#dvallusers").hide();
+
+            } else {
+                $("#dvuserrequest").hide();
+                $("#dvallusers").show();
+            }
+        });
+    </script>
+}
+
