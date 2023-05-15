@@ -8,6 +8,7 @@ using Invoice_Discounting.Services;
 using Invoice_Discounting.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using MimeMapping;
 using OfficeOpenXml;
 
@@ -31,7 +32,8 @@ namespace Invoice_Discounting.Controllers
                 return RedirectToAction("Index", "Login", new { errorMsg = "Session Timeout" });
             }
             string vendorEmail = HttpContext.Session.GetString("UserEmail");
-            IEnumerable<VendorContractListModel> model = repo.GetVendorContractList(vendorEmail);
+            string vendorCode = HttpContext.Session.GetString("VendorId");
+            IEnumerable<VendorContractListModel> model = repo.GetVendorContractList(vendorEmail, vendorCode);
             HttpContext.Session.SetComplexData("VendorContractList", model);
             return View(model);
         }
@@ -195,12 +197,13 @@ namespace Invoice_Discounting.Controllers
         public IActionResult GetVendorContractModal(int contractId, string contractStatus)
         {
             string vendorEmail = HttpContext.Session.GetString("UserEmail");
+            string vendorCode = HttpContext.Session.GetString("VendorId");
             //Raise Invoice
             IEnumerable<VendorContractListModel> contractList = HttpContext.Session.GetComplexData<IEnumerable<VendorContractListModel>>("VendorContractList");
             if (contractList == null)
             {
                 //get the contract list again
-                contractList = repo.GetVendorContractList(vendorEmail);
+                contractList = repo.GetVendorContractList(vendorEmail, vendorCode);
             }
             var model = contractList.Where(c => c.ID == contractId).FirstOrDefault();
             return PartialView("_ContractDetailsAwarded", model);

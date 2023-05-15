@@ -30,5 +30,6 @@ namespace Invoice_Discounting.ViewModel
         public string ProjectName { get; set; }
         public string TotalExcludingVat { get; set; }
         public string VendorCode { get; set; }
+        public string BidStatus { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Invoice_Discounting.Models
         public int LOANID { get; set; }
         public int INVOICEID { get; set; }
         public string INVOICENUMBER { get; set; }
-        public int VENDORCODE { get; set; }
+        public string VENDORCODE { get; set; }
         public string LOANTYPE { get; set; }
         public decimal INTERESTRATE { get; set; }
         public decimal LOANAMOUNT { get; set; }

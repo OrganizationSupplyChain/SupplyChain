@@ -1,0 +1,124 @@
+﻿@model InvestorDetails
+
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+    <div class="modal right fade show my-modal" id="right_modal" tabindex="-1" role="dialog" aria-labelledby="right_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header px-5">
+                    <h5 class="modal-title">@Model.CompanyName</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="~/assets/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body py-3 px-5">
+                    <div class="contract-item">
+                        <h4>
+                            Investor Name:
+                        </h4>
+                  
+                        <p>@Model.CompanyName</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Location:
+                        </h4>
+                        <p>@Model.Location</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Email Address:
+                        </h4>
+                        <p>
+                            @Model.Email
+                        </p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Phone Number:
+                        </h4>
+                        <p>@Model.PhoneNumber</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Primary Account
+                            Number:
+                        </h4>
+                        <p>@Model.AccountNo</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Bank Name:
+                        </h4>
+                        <p>@Model.BANK</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Funding Capacity:
+                        </h4>
+                        <p>@Model.FundingCapacity</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Investment Experience In Year
+                        </h4>
+                        <p>@Model.InvestmentExperienceInYears</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                          Investment Restriction:
+                        </h4>
+                        <p>@Model.InvestmentRestrictions</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Investment Preference:
+                        </h4>
+                        <p>@Model.InvestmentPreferences</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Interest Rate:
+                        </h4>
+                        <p>@Model.InterestRate</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Unique Number:
+                        </h4>
+                        <p>@Model.UNIQUEINVESTORID</p>
+                    </div>
+
+                    <div class="contract-item">
+                        <h4>
+                            Account Name:
+                        </h4>
+                        <p>@Model.AccountName</p>
+                    </div>                   
+                   
+                    
+                    <div class="contract-item">
+                        <h4>
+                            Date Created:
+                        </h4>
+                        <p>@Model.DATECREATED</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+	    });
+    </script>
+

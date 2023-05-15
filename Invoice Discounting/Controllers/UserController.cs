@@ -425,6 +425,7 @@ namespace Invoice_Discounting.Controllers
             var userType = HttpContext.Session.GetString("UserType");
             var userClass = HttpContext.Session.GetString("UserClass");
             int roleId = (int)HttpContext.Session.GetInt32("RoleId");
+            string roleName = HttpContext.Session.GetString("UserRole");
             int corporateid = (int)HttpContext.Session.GetInt32("corporateId"); ;
 
             var enumlistuserType = Enum.GetValues(typeof(UserType)).Cast<UserType>().Select(v => new SelectListItem
@@ -433,7 +434,7 @@ namespace Invoice_Discounting.Controllers
                 Value = ((int)v).ToString()
             });
 
-            var enumlistuserClass = Enum.GetValues(typeof(UserType)).Cast<UserType>().Select(v => new SelectListItem
+            var enumlistuserClass = Enum.GetValues(typeof(UserClass)).Cast<UserType>().Select(v => new SelectListItem
             {
                 Text = v.ToString(),
                 Value = ((int)v).ToString()
@@ -458,7 +459,8 @@ namespace Invoice_Discounting.Controllers
             var corporates = new List<DropdownModel>();
             var vendors = new List<DropdownTextModel>();
             List<string> status = new List<string>();
-            var roles = _dbCall.GetRoles(roleId).Select(x => new DropdownModel() { Value = x.ID, Text = x.ROLENAME }).ToList();
+            var roles = _dbCall.GetUserCreationRoles(roleName).Select(x => new DropdownModel() { Value = x.ID, Text = x.ROLENAME }).ToList();
+
             if (userClass == "CORPORATE")
             {
                 corporates = _dbCall.GetApprovedCorporatesbyCorporateID(corporateid)

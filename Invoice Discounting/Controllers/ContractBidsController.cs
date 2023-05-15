@@ -37,8 +37,8 @@ namespace Invoice_Discounting.Controllers
                 // Get vendor ID mapped to the vendor user
                 string vendorId = HttpContext.Session.GetString("VendorId");
                 // fetch vendor email
-                VendorDetails vendorDetails = dbCall.GetApprovedVendors().Where(x => x.UNIQUEVENDORID == vendorId).FirstOrDefault();
-                vendorEmail = vendorDetails != null ? $"'{vendorDetails.EMAIL}'" : "''";
+               // VendorDetails vendorDetails = dbCall.GetApprovedVendors().Where(x => x.UNIQUEVENDORID == vendorId).FirstOrDefault();
+                vendorEmail = HttpContext.Session.GetString("UserEmail");  //vendorDetails != null ? $"'{vendorDetails.EMAIL}'" : "''";
             }
             else
             {

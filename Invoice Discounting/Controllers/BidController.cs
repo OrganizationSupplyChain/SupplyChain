@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using static Invoice_Discounting.Controllers.BaseController;
+using static Invoice_Discounting.Utility.Enums;
 
 namespace Invoice_Discounting.Controllers
 {
@@ -21,20 +22,33 @@ namespace Invoice_Discounting.Controllers
         }
         public IActionResult Index()
         {
+            int investorId = HttpContext.Session.GetInt32("InvestorId") == null ? 0 : (int)HttpContext.Session.GetInt32("InvestorId");
             // Fetch all available bids for investors
-            IEnumerable<BidViewModel> model = _repo.GetAllAvailableLoanBidList();
+            IEnumerable<BidViewModel> model = _repo.GetAllAvailableLoanBidList(investorId);
             HttpContext.Session.SetComplexData("AvailableLoan", model);
+            return View(model);
+        } 
+        
+        public IActionResult BidHistory()
+        {
+            int investorId = HttpContext.Session.GetInt32("InvestorId") == null ? 0 : (int)HttpContext.Session.GetInt32("InvestorId");
+            
+            // Fetch all Loans this investor has bidded for
+            IEnumerable<BidViewModel> model = _repo.GetLoanBidHistory(investorId);
             return View(model);
         }
 
         public IActionResult PlaceBidModal(int loanId)
         {
             int investorId = HttpContext.Session.GetInt32("InvestorId") == null ? 0 : (int)HttpContext.Session.GetInt32("InvestorId");
-            string investorName = HttpContext.Session.GetString("InvestorName");
+            string investorName = HttpContext.Session.GetString("UserName");
             IEnumerable<BidViewModel> loanList = HttpContext.Session.GetComplexData<IEnumerable<BidViewModel>>("AvailableLoan");
             InsertBidViewModel model = new InsertBidViewModel();
 
             InsertBid bid = new InsertBid();
+            // Set LoanType as InvoiceDiscounting for now
+            bid.LOANTYPE = DiscountingType.INVOICEDISCOUNTING.ToString();
+
             if (loanList != null && loanList.Count() > 0)
             {
                 BidViewModel loadDet = loanList.Where(x => x.id == loanId).FirstOrDefault();
@@ -66,6 +80,10 @@ namespace Invoice_Discounting.Controllers
                 return RedirectToAction("Index");
             }
 
+            if (model.InsertBid.INTERESTRATE <= 0)
+            {
+                return RedirectToAction("Index");
+            }
             // Place bid for investor
             bool bidPlaced = _repo.PlaceBid(model.InsertBid);
 

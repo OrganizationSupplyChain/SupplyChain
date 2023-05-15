@@ -34,8 +34,29 @@ namespace Invoice_Discounting.Controllers
         public IActionResult Index([Bind("UserName,Password,LoggedInAs")] LoginModel model)
         {
             //**********Comment after test
+
+
+            //HttpContext.Session.SetInt32("InvestorId", 3);
+            //HttpContext.Session.SetString("UserEmail", "olamide.olaniyan@gmail.com");
+            //HttpContext.Session.SetString("UserClass", "INVESTOR");
+            //HttpContext.Session.SetString("UserName", "Olamide Adekoya1");
+            //HttpContext.Session.SetString("UserName", "oadekoya");
+            //HttpContext.Session.SetString("UserEmail", "JJC@GMAIL.COM");
             //HttpContext.Session.SetString("UserName", "Olamide Adekoya");
             //HttpContext.Session.SetString("UserEmail", "JJ@GMAIL.COM");
+            //HttpContext.Session.SetString("UserName", "chinonyerem");
+            //HttpContext.Session.SetString("UserLogon", model.UserName);
+            //HttpContext.Session.SetString("UserType", "INTERNAL");
+            //HttpContext.Session.SetString("UserClass", "ACCESSREP");
+            //HttpContext.Session.SetInt32("corporateId", 3);
+            //HttpContext.Session.SetInt32("RoleId", 2);
+            //SetSessionByRole(2);
+            //string roleModules1 = HttpContext.Session.GetString("RoleModule");
+            //string[] route1 = _repository.GetLandingPage(roleModules1);
+
+            //List<string> resourceroute1 = _repository.GetLandingPages(roleModules1);
+            //string userResources1 = string.Join(",", resourceroute1);
+            //HttpContext.Session.SetString("ResourceRoleModule", userResources1);
 
             //return RedirectToAction("Index", "User");
             //*********End comment

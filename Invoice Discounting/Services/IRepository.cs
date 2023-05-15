@@ -30,7 +30,7 @@ namespace Invoice_Discounting.Services
 		bool UpdateContract(ContractViewModel model);
 		ContractResponseViewModel InitiateContractResponse(int contractId);
 		IList<ContractResponseViewModel> GetVendorContractListOld(string vendorEmail);
-		IEnumerable<VendorContractListModel> GetVendorContractList(string vendorEmail);
+		IEnumerable<VendorContractListModel> GetVendorContractList(string currentUserEmail, string uniqueVendorCode);
 		bool SaveContractResponse(ContractResponseViewModel response);
 		VendorResponseDetails GetVendorResponseById(int responseId);
 		string GenerateRandomNos();
@@ -42,7 +42,7 @@ namespace Invoice_Discounting.Services
 		bool IsEmailUnique(string username);
 		bool AuthorizeUser(UsersPending user);
 		bool AuthorizeContractResponse(ContractResponse details);
-		InvoiceViewModel InitiateCreateInvoice(string vendoremail, int contractId, string discountingType);
+		InvoiceViewModel InitiateCreateInvoice(string vendoremail, int contractId, string discountingType, string vendorCode);
 		InvoiceViewModel InitiateCreateExternalInvoice(string uniqueVendorId, string discountingType);
 		bool CreateInvoice(InvoiceViewModel invoiceModel);
 		ValidateDiscountingModel ValidateDiscountingRequest(decimal interestRate, string accountNo, decimal invoiceAmount, int duration, decimal feesRate);
@@ -66,9 +66,11 @@ namespace Invoice_Discounting.Services
 		bool CreateUpdateVendor(UpdateVendor vendor, bool isSingleCorporate);
         bool AuthourizeContract(int responseId, string authStatus, string authorizerEmail, string AuthorizerName);
 		IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode);
-		IEnumerable<BidViewModel> GetAllAvailableLoanBidList();
+		IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId);
+		IEnumerable<BidViewModel> GetLoanBidHistory(int investorId);
         IEnumerable<BidModel> GetBidsByLoanId(int loanIdt);
         bool PlaceBid(InsertBid bidDetails);
         bool AcceptBid(int bidIdt, int loanIdt, int invoiceId);
+        bool CreateUpdateInvestor(UpdateInvestor investor);
     }
 }

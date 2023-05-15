@@ -1,0 +1,363 @@
+﻿
+
+@model InvestorPendingApproveModel
+@{
+    ViewData["Title"] = "Investor Management";
+}
+
+
+<div class="row mt-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div class="search-group">
+            <input type="text" style="width: 300px;" id="txtSearch" placeholder="search" class="form-control pl-5"
+                   aria-label="Text input with checkbox">
+            <i class="fa fa-search"></i>
+
+            <input type="text" style="width: 300px; display:none" id="txtSearchPending" placeholder="search" class="form-control pl-5"
+                   aria-label="Text input with checkbox">
+            <i class="fa fa-search"></i>
+        </div>
+        <div>
+
+            <div>
+                <button type="button" class="btn btn-outline-primary blue-outline-btn" id="lnkCreate">
+                    Create New <img src="~/assets/images/plus-icon.png" />
+                </button>
+
+                @*<button type="button" class="btn btn-outline-primary blue-outline-btn">
+                        Download Data <img src="~/assets/images/file-download-icon.png" />
+                    </button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col-12">
+        <ul class="nav nav-tabs mb-4 border-bottom-0" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active tab-btn " id="all-vendors-tab" data-toggle="tab"
+                        data-target="#all-vendors" type="button" role="tab" aria-controls="all-vendors"
+                        aria-selected="true">
+                    All Investors
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link tab-btn" id="vendors-requests-tab" data-toggle="tab"
+                        data-target="#vendors-requests" type="button" role="tab"
+                        aria-controls="vendors-requests" aria-selected="false">
+                    New Investors Request
+                </button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="card my-card tab-pane active" id="all-vendors">
+                <div class="card-body px-0">
+                    <div class="header px-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Investors List</h5>
+
+                    </div>
+
+                    <div class="notif-wrapper p-4 notif-card " style="height: 55vh;">
+                        <table id="investorTable" class="table example " style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>PhoneNumber</th>
+                                    <th>Email</th>
+                                    <th>AccountNo</th>
+                                    <th>Location</th>
+                                    <th>Bank</th>
+                                    <th>Funding Capacity</th>
+                                    @*<th>Investment Preference</th>
+                                    <th>Investment Restriction</th>
+                                    <th>Investment Experience</th>*@
+                                    <th>Investment InterestRate</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @{ int i = 1; }
+                                @if (Model.investorapproved == null || Model.investorapproved.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="9">No Record Found</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model.investorapproved)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <label> @i </label>
+                                                @{ i++; }
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink(item.CompanyName, "ViewInvestorDetailsModal", new { investorId = item.ID }, new { @class = "link blue", @id = "lnkcontract" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.AccountNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Location)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BANK)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FundingCapacity)
+                                            </td>
+                                           @* <td>
+                                                @Html.DisplayFor(modelItem => item.InvestmentPreferences)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvestmentRestrictions)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvestmentExperienceInYears)
+                                            </td>*@
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InterestRate)
+                                            </td>
+                                            <td>
+                                                <label class="switch">
+                                                    <input type="checkbox" value="@item.STATUSBOOL" checked="@item.STATUSBOOL" name="STATUSBOOL" onclick="InvestorsStatusChange('' + @item.ID + '',this)" />
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("ModifyInvestor", "Investor", new { id = item.ID })" class="edit">
+                                                    <img src="~/assets/images/edit.png" class="mr-2">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card my-card tab-pane" id="vendors-requests">
+                <div class="card-body px-0">
+                    <div class="header px-4 pb-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Investors Requested</h5>
+
+                    </div>
+
+                    <div class="notif-wrapper p-4 notif-card " style="height: 55vh;">
+
+                        <table id="investorTablePending" class="table  example" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>PhoneNumber</th>
+                                    <th>Email</th>
+                                    <th>AccountNo</th>
+                                    <th>Location</th>
+                                    <th>Bank</th>
+                                    <th>Funding Capacity</th>
+                                    @*<th>Investment Preference</th>
+                                    <th>Investment Restriction</th>
+                                    <th>Investment Experience</th>*@
+                                    <th>Investment InterestRate</th>
+                                    <th>Date Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int j = 1; }
+                                @if (Model.investorpending == null || Model.investorpending.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="11">No Record Found</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (var item in Model.investorpending)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <label> @j </label>
+                                                @{ j++; }
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink(item.CompanyName, "ViewInvestorDetailsApprovalModal", new { investorId = item.ID }, new { @class = "link blue", @id = "lnkcontract" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.AccountNo)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Location)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.BANK)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FundingCapacity)
+                                            </td>
+                                            @*<td>
+                                                @Html.DisplayFor(modelItem => item.InvestmentPreferences)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvestmentRestrictions)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvestmentExperienceInYears)
+                                            </td>*@
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InterestRate)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DATECREATED)
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="cmodal"></div>
+@section Scripts
+	{
+    <script>
+        $(document).ready(function () {
+
+            $('#investorTable').DataTable({
+                dom: 'lrtip',
+                order: [],
+                paging: true,
+                info: true,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        className: 'excel',
+                        text: '<i class="fas fa-file-excel"></i>',
+                        footer: true,
+                        titleAttr: 'Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                        titleAttr: 'PDF'
+                    }
+                ]
+            });
+
+            $('#investorTablePending').DataTable({
+                dom: 'lrtip',
+                order: [],
+                paging: true,
+                info: true
+            });
+
+        });
+
+        $("a.link").on('click', function () {
+            $.ajax({
+                url: this.href,
+                type: 'Get',
+                cache: true,
+                success: function (result) {
+                    $('#cmodal').html(result).find('.modal').modal({
+                        show: true
+                    });
+                }
+            });
+            return false;
+        });
+
+        $("#lnkCreate").on('click', function () {
+
+            window.location.href = '@Url.Action("_AddInvestor", "Investor")';
+        });
+
+        $('#txtSearch').on('keyup', function () {
+
+            var searchTxt = $("#txtSearch").val();
+            $('#investorTable').DataTable().search(searchTxt).draw();
+        });
+
+        $('#txtSearchPending').on('keyup', function () {
+
+            var searchTxt = $("#txtSearchPending").val();
+            $('#investorTablePending').DataTable().search(searchTxt).draw();
+        });
+
+        $('button[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            console.log("here");
+            var target = $(e.target).attr("data-target") // activated tab
+            if (target == "#all-vendors") {
+
+                $("#txtSearch").show();
+                $("#txtSearchPending").hide();
+            } else {
+
+                 $("#txtSearch").hide();
+                $("#txtSearchPending").show();
+            }
+        });
+
+        function InvestorsStatusChange(id, e) {
+
+            $.ajax({
+                // async: true,
+                data: { id: id, status: e.checked },
+                url: '/Investor/InvestorStatusChange',
+                type: 'POST',
+                success: function (result) {
+                    if (result == true) {
+                        swal("Success", "Investor status successfully updated", "success");
+                    } else {
+                        swal("Error", "unable to update vendor status", "error");
+                    }
+                }
+            });
+            return true;
+        }
+    </script>
+}
+

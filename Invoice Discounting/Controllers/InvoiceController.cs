@@ -70,10 +70,14 @@ namespace Invoice_Discounting.Controllers
         public IActionResult CreateInvoice(int contractId)
         { 
             var email = HttpContext.Session.GetString("UserEmail");
+            var vendorCode = HttpContext.Session.GetString("VendorId");
             var discType = DiscountingType.INVOICEDISCOUNTING.ToString();
             var termsAndConditions = _config["TermsAndCondition"];
             var contractDetails = _dbCall.GetContractById(contractId);
-            var model = _repo.InitiateCreateInvoice(email, contractId, discType);
+            var model = _repo.InitiateCreateInvoice(email, contractId, discType, vendorCode);
+            
+            if(model == null) { return RedirectToAction("Index", "ContractResponse"); }
+
             if (contractDetails != null)
             {
                 model.InvoiceDetails.totalexcludingvat = contractDetails.ContractAmount;

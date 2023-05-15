@@ -30,7 +30,8 @@ namespace Invoice_Discounting.Utility
 			[Description("CORPORATE")]
 			CORPORATE = 2,
 			[Description("VENDOR AND CORPORATE")]
-			VENDORCORPORATE = 3
+			VENDORCORPORATE = 3,
+			INVESTOR = 4
 		}
 		public enum UserType
         {

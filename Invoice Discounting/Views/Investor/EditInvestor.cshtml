@@ -1,0 +1,219 @@
+﻿@model InvestorViewModel
+@{
+    Layout = "_Layout";
+}
+
+<form asp-controller="Investor" asp-action="_EditInvestor" method="post" autocomplete="off">
+
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+    @functions{
+        public string GetAntiXsrfRequestToken()
+        {
+            return Xsrf.GetAndStoreTokens(Context).RequestToken;
+        }
+    }
+
+    <div class="jumbotron page-wrapper py-5 px-0">
+        <div class="container-fluid container-fluid-small">
+            <!-- body of bashboard -->
+
+            <div class="js-add-field">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card my-card">
+                            <div class="card-body px-0">
+                                <div class="header px-4 pb-3 d-flex justify-content-center align-items-center">
+                                    <h5 class="card-title mb-0">Investor Modification</h5>
+                                </div>
+                                <div class="row my-5">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <ul class="nav nav-tabs py-1 px-1 mb-4 border-bottom-0 box-tab justify-content-center"
+                                            id="myTab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link px-5 active tab-btn border-0"
+                                                        id="all-investors-tab" data-toggle="tab" data-target="#single"
+                                                        type="button" role="tab" aria-controls="all-investors"
+                                                        aria-selected="true">
+                                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg">
+                                                        <path class="menu-icon" fill-rule="evenodd" clip-rule="evenodd"
+                                                              d="M2 0H12C13.1 0 14 0.9 14 2V12C14 13.1 13.1 14 12 14H2C0.9 14 0 13.1 0 12V2C0 0.9 0.9 0 2 0ZM7.57143 7.57143H10.4286C10.7429 7.57143 11 7.31429 11 7C11 6.68571 10.7429 6.42857 10.4286 6.42857H7.57143V3.57143C7.57143 3.25714 7.31429 3 7 3C6.68571 3 6.42857 3.25714 6.42857 3.57143V6.42857H3.57143C3.25714 6.42857 3 6.68571 3 7C3 7.31429 3.25714 7.57143 3.57143 7.57143H6.42857V10.4286C6.42857 10.7429 6.68571 11 7 11C7.31429 11 7.57143 10.7429 7.57143 10.4286V7.57143Z"
+                                                              fill="#9E9FA1" />
+                                                    </svg>
+                                                    UPDATE INVESTOR
+                                                </button>
+                                            </li>
+
+
+
+                                        </ul>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-content container" id="myTabContent">
+                                    <div id="bulk" class="tab-pane">
+                                        <div class="row justify-content-center">
+
+
+
+                                            <div class="col-md-6 form-group">
+
+                                                <div class="row mb-3">
+                                                    <div class="col-12 text-center">
+
+                                                        <button type="button" class="btn btn-outline-primary blue-outline-btn">
+                                                            Download Template <img src="~/assets/images/file-download-icon.png" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+                                                <div id="dZUpload" class="dropzone ng-dropzone">
+                                                    <div class="dz-default dz-message">
+                                                        <img src="~/assets/images/upload_file_icon.png.png" />
+                                                        <h3 class="mb-3">
+                                                            Drag and drop files here, or <a class="link blue" href="#">browse</a>
+                                                        </h3>
+                                                        <span class="p-2 grey-bg">CSV, XLS, XLSX</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row my-5 d-flex justify-content-center">
+                                                    <div class="col-md-12">
+                                                        <button class="my-primary primary-btn btn wid100">Submit</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="single" class="tab-pane active">
+                                        <div class="row">
+                                            <div class="col-md-12 form-group">
+                                                <label>Investor's Name<span class="red">*</span></label>
+                                                @Html.EditorFor(model => model.Investor.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.HiddenFor(model => model.Investor.ID)
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Investor's Phone Number<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Investor.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Investor's Email Address<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Investor.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            <div class="col-md-12 form-group">
+                                                <label>Location <span class="red">*</span></label>
+                                                @Html.EditorFor(model => model.Investor.Location, new { htmlAttributes = new { @class = "form-control" } })
+
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Investor's Financial Capacity <span class="red">*</span></label>
+                                                @Html.EditorFor(model => model.Investor.FundingCapacity, new { htmlAttributes = new { @class = "form-control" } })
+
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Interest Rate % <span class="red">*</span></label>
+                                                @Html.EditorFor(model => model.Investor.InterestRate, new { htmlAttributes = new { @class = "form-control" } })
+
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Bank Name</label><span asp-validation-for="bankname" class="red">*</span>
+                                                @Html.DropDownListFor(model => model.SelectedBankId, Model.Bank ?? new List<SelectListItem>(),Model.Investor.BANK, new { @class = "form-control" })
+
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label for="inputEmail4">Bank Account</label><span asp-validation-for="Investor.AccessAccountNo" class="red">*</span>
+                                                @Html.EditorFor(model => model.Investor.AccountNo, new { htmlAttributes = new { @class = "form-control", @id = "accountno" } })
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="inputEmail4">Account Name</label><span asp-validation-for="Investor.AccountName" class="red">*</span>
+                                                @Html.EditorFor(model => model.Investor.AccountName, new { htmlAttributes = new { @class = "form-control", @id = "accountname", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>InvestmentExperience in Years<span class="red">*</span></label>
+
+                                                @Html.EditorFor(model => model.Investor.InvestmentExperienceInYears, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label>Investment Preference</label><span class="red">*</span>
+                                                @Html.DropDownListFor(model => model.SelectedInvestmentPreferenceId, Model.investmentPreference ?? new List<SelectListItem>(), Model.Investor.InvestmentPreferences, new { @class = "form-control" })
+
+                                            </div>
+
+                                            <div class="col-md-6 form-group">
+                                                <label>Investment Restriction</label><span class="red">*</span>
+
+                                                @Html.DropDownListFor(model => model.SelectedInvestmentRestrictionId,Model.investmentRestriction ?? new List<SelectListItem>(),Model.Investor.InvestmentRestrictions,new { @class = "form-control" })
+
+                                            </div>
+
+
+                                            <div class="col-md-6 form-group">
+                                                <label>Investor''s Unique Number<span class="red"></span></label>
+
+                                                @Html.EditorFor(model => model.Investor.UNIQUEINVESTORID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+
+                                            <div class="col-md-6 form-group">
+                                                <label>Created By<span class="red"></span></label>
+
+                                                @Html.EditorFor(model => model.Investor.CREATEDBYNAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+
+                                            <div class="col-md-6 form-group">
+                                                <label>Date Initiated<span class="red"></span></label>
+
+                                                @Html.EditorFor(model => model.Investor.DATECREATED, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+
+
+                                            <div class="col-md-6 form-group">
+                                                <label>Investor Status<span class="red">*</span></label>
+
+                                                @Html.HiddenFor(model => model.Investor.ID)
+                                                @Html.DropDownListFor(model => model.Investor.STATUS, new List<SelectListItem>{
+                                                    new SelectListItem() { Text = "ACTIVE", Value = "1" },
+                                                    new SelectListItem() { Text = "DISABLE", Value = "0" }
+                                                }, new { @class = "form-control" })
+                                            </div>
+
+                                        </div>
+                                        <div class="row my-3 d-flex justify-content-center">
+                                            <div class="col-md-6">
+                                                <button type="submit" class="my-primary primary-btn btn wid100">Update</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--end of body-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <script>
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            jqXHR.setRequestHeader("__RequestVerificationToken", '@GetAntiXsrfRequestToken()');
+	});
+    </script>
+</form>

@@ -12,11 +12,15 @@ namespace Invoice_Discounting.Services
 		Users GetUserByUsername(string username);
 		Users GetUserById(int userId);
 
-		IEnumerable<Users> GetAllUsers(int roleId, string userClass);
+		IEnumerable<Users> GetAllUsers(int corporateId, string userClass);
 		bool UpdateLastLoginDate(string username);
 		IEnumerable<Roles> GetRoles();
-		IEnumerable<Roles> GetRoles(int roleid);
-		IEnumerable<Modules> GetModules();
+		Roles GetRoleById(int roleId);
+
+        IEnumerable<Roles> GetRoles(int roleid);
+		IEnumerable<Roles> GetUserCreationRoles(string roleName);
+
+        IEnumerable<Modules> GetModules();
 		int UpdateInsertUser(UpdateUser userDetails);
 		bool AuthorizeUser(AuthorizeUser user);
 		IEnumerable<CorporateDetails> GetApprovedCorporates();
@@ -80,7 +84,7 @@ namespace Invoice_Discounting.Services
 		bool InsertUDFResponse(InsertContractUDFResponse udfRespDetails);
 		bool AuthorizeContractResponse(AuthorizeContractResponse authDetails);
 		List<ContractDetails> GetAwardedContractByVendor(string vendorEmail);
-		IEnumerable<VendorContractListModel> GetVendorContractList(string vendorEmail);
+		IEnumerable<VendorContractListModel> GetVendorContractList(string vendorEmail, string currentUserEmail);
 		int InsertInvoiceDetails(ContractInvoice invoiceDetails);
 		bool InsertInvoiceLoanDetails(InvoiceLoan loanDetails);
 		bool InsertInvoiceItemDetails(InvoiceItem invoiceItem);
@@ -136,14 +140,25 @@ namespace Invoice_Discounting.Services
         bool UpdateLogonStatusbyUsername(string username);
 		bool IsSingleCorporate(int corporateId);
 		IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode);
-		IEnumerable<BidViewModel> GetAllAvailableLoanBidList();
+		IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId);
+		IEnumerable<BidViewModel> GetLoanBidHistory(int investorId);
         IEnumerable<BidModel> GetBidByLoanId(int loanIdt);
         bool PlaceBid(InsertBid bidDetails);
         bool AcceptBid(int bidIdt, int loanIdt);
         bool UpdateLoanStatusAfterSubmittingBid(int loanId);
         IEnumerable<CorporateDetails> GetApprovedCorporatesbyCorporateID(int corporateid);
         IEnumerable<VendorDetails> GetApprovedVendorsbyCorporateID(int corporateid);
-
         IEnumerable<VendorContractBidsDetails> GetContractbidsbyVendorEmail(string vendoremail);
+        List<InvestmentPreferenceList> GetInvestmentPreferenceLists();
+        List<InvestmentRestrictionList> GetInvestmentRestrictionLists();
+        IEnumerable<Investor> GetAllValidInvestors();
+        int UpdateInsertInvestor(UpdateInvestor investor);
+        bool UpdateInvestorStatus(int id, bool status);
+        IEnumerable<InvestorDetails> GetApprovedInvestorsbyInvestorId(int investorId);
+        IEnumerable<InvestorDetails> GetApprovedInvestors(int investorId);
+        IEnumerable<InvestorDetails> GetApprovedInvestors();
+        IEnumerable<InvestorDetailsPending> GetPendingInvestors(string currentuseremail, int investorId);
+        IEnumerable<InvestorDetailsPending> GetPendingInvestors(string currentuseremail);
+        bool AuthorizeInvestor(AuthorizeInvestor investor);
     }
 }

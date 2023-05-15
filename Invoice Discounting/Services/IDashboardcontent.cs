@@ -9,7 +9,7 @@ namespace Invoice_Discounting.Services
     public interface IDashboardcontent
     {
 
-        Task<DashboardViewModel> GetDashboardDetails(string useremailcurrent,string userclass, string usertype,Int32 corporateID, string loggedInAsCorp, string loggedInAsVendor);
+        Task<DashboardViewModel> GetDashboardDetails(string useremailcurrent,string userclass, string usertype,Int32 corporateID, string loggedInAsCorp, string loggedInAsVendor, string uniqueVendorCode);
 
     }
 }

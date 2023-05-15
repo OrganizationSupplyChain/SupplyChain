@@ -412,7 +412,7 @@ namespace Invoice_Discounting.Services
             //int roleId = (int)HttpContext.Session.GetInt32("RoleId");
             try
             {
-                Roles role = _dbcalls.GetRoles().Where(x => x.ID == id).FirstOrDefault();
+                Roles role = _dbcalls.GetRoleById(id);
                 return role;
             }
             catch (Exception ex)
@@ -587,16 +587,18 @@ namespace Invoice_Discounting.Services
                 return null;
             }
         }
-        public IEnumerable<VendorContractListModel> GetVendorContractList(string vendorEmail)
+
+        public IEnumerable<VendorContractListModel> GetVendorContractList(string currentUserEmail, string uniqueVendorCode)
         {
             try
             {
                 //var vendor = _dbcalls.GetApprovedVendors().Where(v => v.EMAIL == vendorEmail).FirstOrDefault();
                 //var vendor = _dbcalls.GetApprovedVendorusers().Where(v => v.VENDOREMAIL == vendorEmail).FirstOrDefault();
-                var vendor = _dbcalls.GetApprovedVendorusers().Where(v => v.LOGINUSEREMAIL == vendorEmail).FirstOrDefault();
+               //var vendor = _dbcalls.GetApprovedVendorusers().Where(v => v.LOGINUSEREMAIL == vendorEmail).FirstOrDefault();
+                var vendor = _dbcalls.GetApprovedVendors().Where(v => v.STATUS == "1" && v.UNIQUEVENDORID == uniqueVendorCode).FirstOrDefault();
                 if (vendor != null)
                 {
-                    var contractDetails = _dbcalls.GetVendorContractList(vendor.VENDOREMAIL);
+                    var contractDetails = _dbcalls.GetVendorContractList(vendor.EMAIL, currentUserEmail);
                     return contractDetails;
                 }
                 else
@@ -1270,7 +1272,7 @@ namespace Invoice_Discounting.Services
             }
         }
 
-        public InvoiceViewModel InitiateCreateInvoice(string vendoremail, int contractId, string discountingType)
+        public InvoiceViewModel InitiateCreateInvoice(string vendoremail, int contractId, string discountingType, string vendorCode)
         {
             InvoiceViewModel viewModel = new InvoiceViewModel();
             try
@@ -1278,8 +1280,13 @@ namespace Invoice_Discounting.Services
                 string refNo = GenerateReference();
 
                 ContractDetails contract = _dbcalls.GetContractById(contractId);
-                VendorDetails vendor = _dbcalls.GetApprovedVendors().Where(v => v.EMAIL == vendoremail).FirstOrDefault();
+                VendorDetails vendor = _dbcalls.GetApprovedVendors().Where(v => v.UNIQUEVENDORID == vendorCode && v.STATUS == "1").FirstOrDefault();
                 CorporateDetails corporate = _dbcalls.GetApprovedCorporates().Where(c => c.ID == contract.CORPORATEID).FirstOrDefault();
+                
+                if(vendor == null || corporate == null)
+                {
+                    return null;
+                }
                 ContractInvoice contractInvoice = new ContractInvoice()
                 {
                     accountname = vendor.NAME,
@@ -1478,9 +1485,10 @@ namespace Invoice_Discounting.Services
                     decimal fees = decimal.Divide(feesRate,100) * eligibleAmt;
 
                     // Compute interest using the corporate's interest rate
-                    decimal interest = (eligibleAmt * interestRate * duration) / (100 * 365);
+                    //Comment because process has changed and investors decide interest rate
+                   // decimal interest = (eligibleAmt * interestRate * duration) / (100 * 365);
 
-                    validateModel.Interest = interest;
+                    validateModel.Interest = 0;
                     validateModel.Fees = fees;
                     validateModel.EligibleAmount = eligibleAmt;
 
@@ -2383,9 +2391,11 @@ namespace Invoice_Discounting.Services
                         var loanUpdated = _dbcalls.UpdateInvoiceLoanStatus(model.id, LoanStatus.APPROVED.ToString());
                        
                         //send email to all investors
-                        List<string> investors = new List<string>(); // TODO: Get Investors  _dbcalls.GetAllInvestorsEmail();
+                       // List<string> investors = new List<string>(); 
+                       // TODO: Validate Investor's preference with vendor category;
+                        IEnumerable<Investor> investors = _dbcalls.GetAllValidInvestors();
 
-                        foreach (string investor in investors)
+                        foreach (Investor investor in investors)
                         {
                             SendMailReq investorsMailReq = new SendMailReq()
                             {
@@ -2393,7 +2403,7 @@ namespace Invoice_Discounting.Services
                                 CopyAddress = "",
                                 From = "no-reply@supplychain.com",
                                 Subject = "New Supply Chain Loan",
-                                Recipient = investor,
+                                Recipient = investor.EMAIL,
                                 attachment = "",
                                 DisplayAsHtml = true,
                                 DisplayName = "Supply Chain"
@@ -2610,7 +2620,8 @@ namespace Invoice_Discounting.Services
            
             try
             {
-                var approvedUsers = _dbcalls.GetAllUsers(roleId, userClass);
+
+                var approvedUsers = _dbcalls.GetAllUsers(corporateid, userClass);
                 var pendingUsers = _dbcalls.GetPendingUsers(userEmail, userClass, roleId, corporateid);
 
                 // For corporate user, only display users that are vendors and mapped to the logged in corporate
@@ -2757,11 +2768,24 @@ namespace Invoice_Discounting.Services
             }
         } 
         
-        public IEnumerable<BidViewModel> GetAllAvailableLoanBidList()
+        public IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId)
         {
             try
             {
-                return _dbcalls.GetAllAvailableLoanBidList();
+                return _dbcalls.GetAllAvailableLoanBidList(investorId);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return Enumerable.Empty<BidViewModel>();
+            }
+        }
+
+        public IEnumerable<BidViewModel> GetLoanBidHistory(int investorId)
+        {
+            try
+            {
+                return _dbcalls.GetLoanBidHistory(investorId);
             }
             catch (Exception ex)
             {
@@ -2789,8 +2813,12 @@ namespace Invoice_Discounting.Services
             {
                 bool bidPlaced = _dbcalls.PlaceBid(bidDetails);
 
-                // Update Loan status to Bid Ongoing, once a bid has been submitted
-                _dbcalls.UpdateLoanStatusAfterSubmittingBid(bidDetails.LOANID);
+                if(bidPlaced)
+                {
+                    // Update Loan status to Bid Ongoing, once a bid has been submitted
+                    _dbcalls.UpdateLoanStatusAfterSubmittingBid(bidDetails.LOANID);
+                }
+                
 
                 return bidPlaced;
             }
@@ -2805,13 +2833,42 @@ namespace Invoice_Discounting.Services
         {
             try
             {
+                bool disbursed = false;
                 bool bidAccepted = _dbcalls.AcceptBid(bidIdt, loanIdt);
 
-                // Process Payment
-                // Disburse funds and debit fees
-                var disbursed = ProcessInvoiceDiscounting(invoiceId);
+                if (bidAccepted)
+                {
+                    // Process Payment
+                    // Disburse funds and debit fees
+                    // TODO: Process Invoice discounting from Investor's account
+                    //disbursed = ProcessInvoiceDiscounting(invoiceId);
+                }
+                
 
                 return bidAccepted && disbursed;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
+        }
+
+        public bool CreateUpdateInvestor(UpdateInvestor investor)
+        {
+            try
+            {
+                var createUpdateId = _dbcalls.UpdateInsertInvestor(investor);
+
+                if (createUpdateId > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
             catch (Exception ex)
             {

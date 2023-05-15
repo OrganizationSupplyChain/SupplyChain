@@ -9,63 +9,68 @@
         {
             return Xsrf.GetAndStoreTokens(Context).RequestToken;
         }
-    } <div id="view-issue" class="modal fade view-issue" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+    } 
+    <div class="modal right fade show my-modal" id="right_modal" tabindex="-1" role="dialog" aria-labelledby="right_modal">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Authorize Corporate</h4>
+                <div class="modal-header px-5">
+                    <h5 class="modal-title">Invoice Number - @Model.InsertBid.INVOICENUMBER</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                        <img src="~/assets/images/close-icon.png" />
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="tb-card-body">
-                        <div class="tb-padd-lr-30 tb-alert-wrap">
-                            <div class="tb-height-b25 tb-height-lg-b25"></div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Vendor Name</label>
-                                    @Html.HiddenFor(model => model.InsertBid.INVESTORID)
-                                    @Html.HiddenFor(model => model.InsertBid.LOANID)
-                                    @Html.HiddenFor(model => model.InsertBid.VENDORCODE)
-                                    @Html.HiddenFor(model => model.InsertBid.LOANTYPE)
-                                    @Html.EditorFor(model => model.VendorName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Invoice Number</label>
-                                    @Html.EditorFor(model => model.InsertBid.INVOICENUMBER, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Loan Amount</label>
-                                    @Html.EditorFor(model => model.LoanAmount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Interest Rate</label> <span asp-validation-for="InsertBid.INTERESTRATE" class="danger-color"></span>
-                                    @Html.EditorFor(model => model.InsertBid.INTERESTRATE, new { htmlAttributes = new { @class = "form-control" } })
-
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Investor Name</label>
-                                    @Html.EditorFor(model => model.InsertBid.INVESTORNAME, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputEmail4">Bid Date</label>
-                                    @Html.EditorFor(model => model.BidDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-
-                                </div>
-                            </div>
-
-                            <div class="tb-height-b15 tb-height-lg-b15"></div>
-                        </div>
+                <div class="modal-body py-3 px-5">
+                    <div class="contract-item">
+                        <h4>
+                            Vendor Name:
+                        </h4>
+                        @Html.HiddenFor(model => model.InsertBid.INVESTORID)
+                        @Html.HiddenFor(model => model.InsertBid.INVESTORNAME)
+                        @Html.HiddenFor(model => model.InsertBid.LOANID)
+                        @Html.HiddenFor(model => model.InsertBid.INVOICEID)
+                        @Html.HiddenFor(model => model.InsertBid.INVOICENUMBER)
+                        @Html.HiddenFor(model => model.InsertBid.VENDORCODE)
+                        @Html.HiddenFor(model => model.InsertBid.LOANTYPE)
+                        @Html.HiddenFor(model => model.InsertBid.LOANAMOUNT)
+                        <p>@Model.VendorName</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Invoice Number:
+                        </h4>
+                        <p>@Model.InsertBid.INVOICENUMBER</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Loan Amount:
+                        </h4>
+                        <p>@Model.LoanAmount</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Interest Rate:
+                        </h4>
+                        <p>
+                            @Html.EditorFor(model => model.InsertBid.INTERESTRATE, new { htmlAttributes = new { @class = "form-control" } })
+                            <span asp-validation-for="InsertBid.INTERESTRATE" class="danger-color"></span>
+                        </p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Investor Name
+                        </h4>
+                        <p>@Model.InsertBid.INVESTORNAME</p>
+                    </div>
+                    <div class="contract-item">
+                        <h4>
+                            Bid Date:
+                        </h4>
+                        <p>@Model.BidDate</p>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Place Bid</button>
+                <div class="modal-footer modal-footer-fixed border-top-0 d-flex justify-content-center" style="column-gap: 30px;">
+                    <button type="submit" class="btn btn-primary my-primary btn-sm" style="width: 128px;">Place Bid</button>
+                    <button type="button" data-dismiss="modal" id="btndecline" class="btn btn-outline-primary orange-outline-btn btn-sm" style="width: 128px;">Close</button>
                 </div>
             </div>
         </div>

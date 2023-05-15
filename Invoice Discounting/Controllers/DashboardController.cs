@@ -35,7 +35,8 @@ namespace Invoice_Discounting.Controllers
             int corporateID = (int) HttpContext.Session.GetInt32("corporateId");
             string loggedInAsCorp = HttpContext.Session.GetString("LoggedInAsCorporate");
             string loggedInAsVendor = HttpContext.Session.GetString("LoggedInAsVendor");
-                var model = await _dashboardcontent.GetDashboardDetails(currentuseremail,userclass,usertype,corporateID,loggedInAsCorp,loggedInAsVendor);
+            string uniqueVendorCode = HttpContext.Session.GetString("VendorId");
+            var model = await _dashboardcontent.GetDashboardDetails(currentuseremail,userclass,usertype,corporateID,loggedInAsCorp,loggedInAsVendor, uniqueVendorCode);
 
             return View(model);
         }

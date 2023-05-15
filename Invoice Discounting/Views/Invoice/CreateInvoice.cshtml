@@ -20,7 +20,12 @@
 
                         <div class="card-body px-0">
                             <div class="header px-4 pb-3 d-flex justify-content-center align-items-center">
-                                <h5 class="card-title mb-0">Contracts Invoice</h5>
+                                <h5 class="card-title mb-0">
+                                    <a href="@Url.Action("Index", "ContractResponse")">
+                                        <img src="~/assets/images/arrow-back-icon.png" title="Back to Coontract List" />
+                                    </a>&nbsp; &nbsp;
+                                    Contracts Invoice
+                                </h5>
                             </div>
                             <div class="">
 
@@ -173,19 +178,18 @@
                                                 @Html.EditorFor(model => model.LoanDetails.requestedamount, new { htmlAttributes = new { @class = "form-control", @id = "requestedamt" } })
                                             </div>
                                         </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="inputEmail4">Interest</label>
-                                                @Html.EditorFor(model => model.LoanDetails.interest, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "interest" } })
-                                            </div>
+                                        <div class="form-row">                                           
                                              <div class="form-group col-md-6">
                                                 <label for="inputEmail4">Fees</label>
                                                 @Html.EditorFor(model => model.LoanDetails.fees, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "fees" } })
                                             </div>
                                             <div class="form-group col-md-6">
-                                                <label for="inputEmail4">Total Repayment</label>
+                                                <label for="inputEmail4">Total Repayment (excluding interest)</label>
                                                 @Html.EditorFor(model => model.LoanDetails.totalamount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "totalrepayment" } })
-
+                                            </div>
+                                            <div class="form-group col-md-6" style="display:none">
+                                                <label for="inputEmail4">Interest</label>
+                                                @Html.EditorFor(model => model.LoanDetails.interest, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @id = "interest" } })
                                             </div>
                                         </div>
                                         @*<div class="form-row col-md-4">
@@ -243,7 +247,7 @@
                  var duration = $('#duration').val();
                  var feesrate = $('#feesrate').val();
 
-                 var interest = (+requestedamt * +interestrate * +duration) / (100 * 365);
+                 var interest = 0; // (+requestedamt * +interestrate * +duration) / (100 * 365);
                  var fees = (+feesrate / 100) * +requestedamt
 
                  $('#interest').val(interest.toFixed(2));

@@ -92,17 +92,18 @@ namespace Invoice_Discounting.Services
                 return null;
             }
         }
-        public IEnumerable<Users> GetAllUsers(int roleId, string userClass)
+        public IEnumerable<Users> GetAllUsers(int corporateId, string userClass)
         {
             try
             {
 
                 OracleConnection conn = new OracleConnection(connString);
-                var parameter = new { roleID = roleId, UserClass = userClass };
-                string sql = "SELECT * FROM DISCOUNTING_USERS WHERE ROLEID= :roleID and USERCLASS= :UserClass";
-                if (userClass == UserClass.ACCESSREP.ToString()) // For AccessRep also select VendorCorporate Users
+                var parameter = new { corpID = corporateId};
+                string sql = "SELECT * FROM DISCOUNTING_USERS WHERE VENDORCORPID = :corpID OR CORPORATECORPID  = :corpID";
+                if (userClass == UserClass.ACCESSREP.ToString()) // AccessRep should view all users
                 {
-                    sql = "SELECT * FROM DISCOUNTING_USERS WHERE ROLEID= :roleID AND USERCLASS= :UserClass OR USERCLASS = 'VENDORCORPORATE'";
+                    //sql = "SELECT * FROM DISCOUNTING_USERS WHERE ROLEID= :roleID AND USERCLASS= :UserClass OR USERCLASS = 'VENDORCORPORATE'";
+                    sql = "SELECT * FROM DISCOUNTING_USERS";
                 }
                 using (conn)
                 {
@@ -144,7 +145,7 @@ namespace Invoice_Discounting.Services
         {
             switch (roleName)
             {
-                case 30:
+                case 30: // AccessAdminRep
                     try
                     {
                         OracleConnection conn = new OracleConnection(connString);
@@ -164,7 +165,7 @@ namespace Invoice_Discounting.Services
                     }
 
                     break;
-                case 29:
+                case 29: // RelationshipManager
                     try
                     {
                         OracleConnection conn = new OracleConnection(connString);
@@ -186,7 +187,7 @@ namespace Invoice_Discounting.Services
 
                     break;
 
-                case 31:
+                case 31: //Corporate
                     try
                     {
                         OracleConnection conn = new OracleConnection(connString);
@@ -206,7 +207,117 @@ namespace Invoice_Discounting.Services
                     }
 
                     break;
-                default:
+                default:  // VendorAndCorporate
+                    try
+                    {
+                        OracleConnection conn = new OracleConnection(connString);
+                        string sql = "SELECT * FROM DISCOUNTING_ROLE where rolename ='Vendor' order by createddate desc";
+                        using (conn)
+                        {
+                            conn.Open();
+                            List<Roles> roles = conn.Query<Roles>(sql, commandType: CommandType.Text).ToList();
+
+                            return roles;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        return null;
+                    }
+
+                    break;
+            }
+        }
+        public IEnumerable<Roles> GetAllRoles()
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                string sql = "SELECT * FROM DISCOUNTING_ROLE order by createddate desc";
+                using (conn)
+                {
+                    conn.Open();
+                    List<Roles> roles = conn.Query<Roles>(sql, commandType: CommandType.Text).ToList();
+
+                    return roles;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+
+        }
+
+        public IEnumerable<Roles> GetUserCreationRoles(string roleName)
+        {
+            switch (roleName)
+            {
+                case "AccessAdminRep": 
+                    try
+                    {
+                        OracleConnection conn = new OracleConnection(connString);
+                        string sql = "SELECT * FROM DISCOUNTING_ROLE where rolename in ('RelationshipManager','AccessAdminRep','VendorAndCorporate','Corporate') order by createddate desc";
+                        using (conn)
+                        {
+                            conn.Open();
+                            List<Roles> roles = conn.Query<Roles>(sql, commandType: CommandType.Text).ToList();
+
+                            return roles;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        return null;
+                    }
+
+                    break;
+                case "RelationshipManager": 
+                    try
+                    {
+                        OracleConnection conn = new OracleConnection(connString);
+                        string sql = "SELECT * FROM DISCOUNTING_ROLE where rolename in ('RelationshipManager','Corporate') order by createddate desc";
+                        using (conn)
+                        {
+                            conn.Open();
+                            List<Roles> roles = conn.Query<Roles>(sql, commandType: CommandType.Text).ToList();
+
+                            return roles;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        return null;
+                    }
+
+
+                    break;
+
+                case "Corporate":
+                    try
+                    {
+                        OracleConnection conn = new OracleConnection(connString);
+                        string sql = "SELECT * FROM DISCOUNTING_ROLE where rolename in ('Vendor') order by createddate desc";
+                        using (conn)
+                        {
+                            conn.Open();
+                            List<Roles> roles = conn.Query<Roles>(sql, commandType: CommandType.Text).ToList();
+
+                            return roles;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        return null;
+                    }
+
+                    break;
+                default:  // VendorAndCorporate
                     try
                     {
                         OracleConnection conn = new OracleConnection(connString);
@@ -240,6 +351,30 @@ namespace Invoice_Discounting.Services
                 {
                     conn.Open();
                     List<Roles> roles = conn.Query<Roles>(sql, commandType: CommandType.Text).ToList();
+
+                    return roles;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+
+        }
+
+        public Roles GetRoleById(int roleId)
+        {
+
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                var parameter = new { idt = roleId };
+                string sql = "SELECT * FROM DISCOUNTING_ROLE WHERE ID = :idt order by createddate desc";
+                using (conn)
+                {
+                    conn.Open();
+                    Roles roles = conn.Query<Roles>(sql, parameter, commandType: CommandType.Text).FirstOrDefault();
 
                     return roles;
                 }
@@ -392,17 +527,12 @@ namespace Invoice_Discounting.Services
             }
         }
 
-        public IEnumerable<VendorDetails> GetApprovedVendorsbyCorporateID(int corporateid)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<VendorContractBidsDetails> GetContractbidsbyVendorEmail(string vendoremail)
         {
             try
             {
                 OracleConnection conn = new OracleConnection(connString);
-                string sql = $"SELECT A.VENDORNAME,A.RESPONSESTATUS, C.CORPORATENAME, C.UNIQUECORPORATEID, B.CONTRACTNUMBER , B.CONTRACTNAME FROM DISCOUNTING_CONTRACT_RESPONSE A LEFT OUTER JOIN DISCOUNTING_CONTRACT B ON B.ID = A.CONTRACTID LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS C ON C.ID = B.CORPORATEID  WHERE A.VENDOREMAIL  in ({vendoremail})";
+                string sql = $"SELECT A.VENDORNAME,A.RESPONSESTATUS, C.CORPORATENAME, C.UNIQUECORPORATEID, B.CONTRACTNUMBER , B.CONTRACTNAME FROM DISCOUNTING_CONTRACT_RESPONSE A LEFT OUTER JOIN DISCOUNTING_CONTRACT B ON B.ID = A.CONTRACTID LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS C ON C.ID = B.CORPORATEID  WHERE A.VENDOREMAIL  in ('{vendoremail}')";
                 using (conn)
                 {
                     conn.Open();
@@ -880,8 +1010,8 @@ namespace Invoice_Discounting.Services
                           "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS corp ON A.CORPORATECORPID = corp.ID \n" +
                           "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS corpVendor ON A.VENDORCORPID = corpVendor.ID \n" +
                           "LEFT OUTER JOIN DISCOUNTING_VENDOR vendor ON A.VENDORID = vendor.UNIQUEVENDORID \n" +
-                          "WHERE A.AUTHORIZATIONSTATUS = 0 AND B.USERCLASS = :uclass  AND A.INPUTTEREMAIL != :uemail \n" +
-                          "AND B.ROLEID = :roleid  order by A.createddate desc";
+                          "WHERE A.AUTHORIZATIONSTATUS = 0 AND A.INPUTTEREMAIL != :uemail \n" +
+                          "order by A.createddate desc";
                 }
                 else if(userclass == "CORPORATE")
                 {
@@ -894,8 +1024,8 @@ namespace Invoice_Discounting.Services
                           "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS corp ON A.CORPORATECORPID = corp.ID \n" +
                           "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS corpVendor ON A.VENDORCORPID = corpVendor.ID \n" +
                           "LEFT OUTER JOIN DISCOUNTING_VENDOR vendor ON A.VENDORID = vendor.UNIQUEVENDORID \n" +
-                          "WHERE A.AUTHORIZATIONSTATUS = 0 AND B.USERCLASS = :uclass  AND A.INPUTTEREMAIL != :uemail \n" +
-                          "AND B.ROLEID in ('32','31') AND A.VENDORCORPID=:coporateid  order by A.createddate desc";
+                          "WHERE A.AUTHORIZATIONSTATUS = 0 AND A.INPUTTEREMAIL != :uemail \n" +
+                          "AND UPPER(A.ROLENAME) IN ('CORPORATE', 'VENDOR') AND A.VENDORCORPID=:coporateid  order by A.createddate desc";
                 }
                 else
                 {
@@ -908,8 +1038,8 @@ namespace Invoice_Discounting.Services
                           "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS corp ON A.CORPORATECORPID = corp.ID \n" +
                           "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS corpVendor ON A.VENDORCORPID = corpVendor.ID \n" +
                           "LEFT OUTER JOIN DISCOUNTING_VENDOR vendor ON A.VENDORID = vendor.UNIQUEVENDORID \n" +
-                          "WHERE A.AUTHORIZATIONSTATUS = 0 AND B.USERCLASS = :uclass  AND A.INPUTTEREMAIL != :uemail \n" +
-                          "AND B.ROLEID = :roleid AND A.CORPORATECORPID=:coporateid  order by A.createddate desc";
+                          "WHERE A.AUTHORIZATIONSTATUS = 0 AND A.INPUTTEREMAIL != :uemail \n" +
+                          "AND A.ROLEID = :roleid AND A.CORPORATECORPID=:coporateid  order by A.createddate desc";
                 }
 
                 using (conn)
@@ -2285,25 +2415,25 @@ namespace Invoice_Discounting.Services
             }
         }
 
-        public IEnumerable<VendorContractListModel> GetVendorContractList(string vendorEmail)
+        public IEnumerable<VendorContractListModel> GetVendorContractList(string vendorEmail, string currentUserEmail)
         {
             try
             {
                 OracleConnection conn = new OracleConnection(connString);
-                var parameter = new { vendorMail = vendorEmail };
+                var parameter = new { vendorMail = vendorEmail, userEmail = currentUserEmail };
                 string sql = $"SELECT \n" +
                                 "    A.*,\n" +
                                 "    B.CORPORATENAME,\n" +
                                 "    CASE " +
-                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_INVOICE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :vendorMail) THEN 'Completed' \n" +
-                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :vendorMail AND RESPONSESTATUS = 'Awarded') THEN 'Awarded' \n" +
+                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_INVOICE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :userEmail) THEN 'Completed' \n" +
+                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :userEmail AND RESPONSESTATUS = 'Awarded') THEN 'Awarded' \n" +
                                 "      WHEN EXISTS (SELECT * FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND RESPONSESTATUS = 'Awarded') THEN 'Rejected' \n" +
-                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :vendorMail AND RESPONSESTATUS = 'Rejected') THEN 'Rejected' \n" +
-                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :vendorMail AND RESPONSESTATUS = 'Ongoing') THEN 'Pending' \n" +
-                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :vendorMail AND RESPONSESTATUS = 'Declined') THEN 'Declined' \n" +
+                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :userEmail AND RESPONSESTATUS = 'Rejected') THEN 'Rejected' \n" +
+                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :userEmail AND RESPONSESTATUS = 'Ongoing') THEN 'Pending' \n" +
+                                "      WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :userEmail AND RESPONSESTATUS = 'Declined') THEN 'Declined' \n" +
                                 "      ELSE 'New'" +
                                 "    END AS CONTRACTSTATUS, \n" +
-                                "    (SELECT ID FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :vendorMail) AS RESPONSEID, \n" +
+                                "    (SELECT ID FROM DISCOUNTING_CONTRACT_RESPONSE WHERE CONTRACTID = A.ID AND VENDOREMAIL = :userEmail) AS RESPONSEID, \n" +
                                 "    '' AS AWARDVENDORNAME \n" +
                                 "FROM DISCOUNTING_CONTRACT A \n" +
                                 "LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS B ON A.CORPORATEID = B.ID \n" +
@@ -3880,22 +4010,68 @@ namespace Invoice_Discounting.Services
             }
         }
 
-        public IEnumerable<BidViewModel> GetAllAvailableLoanBidList()
+        public IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId)
         {
             try
             {
                 OracleConnection conn = new OracleConnection(connString);
+                var parameter = new { invid = investorId };
 
                 // diaplay loans that has been approved by the corporate and the loans that bids has been submitted but none has been accepted
-                string sql = @"SELECT dil.*, di.VENDORNAME, di.PROJECTNAME, di.TOTALEXCLUDINGVAT, di.VENDORCODE 
+                // do not return data if investor has bidded before
+                string sql = @"SELECT dil.*, di.VENDORNAME, di.PROJECTNAME, di.TOTALEXCLUDINGVAT, di.VENDORCODE,
+                                CASE
+                                    WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_BID WHERE INVESTORID = :invid AND LOANID = dil.ID AND STATUS = 'ACCEPTED') THEN 'Bid Accepted'
+                                    WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_BID WHERE INVESTORID = :invid AND LOANID = dil.ID AND STATUS = 'REJECTED') THEN 'Bid Rejected'
+                                    WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_BID WHERE INVESTORID = :invid AND LOANID = dil.ID AND STATUS = 'INITIATED') THEN 'Bid Ongoing'
+                                ELSE 'New'
+                                END AS BIDSTATUS
                                 FROM DISCOUNTING_INVOICE_LOAN dil 
                                 LEFT OUTER JOIN DISCOUNTING_INVOICE di ON di.ID = dil.INVOICEID 
                                 WHERE di.INVOICESTATUS = 'COMPLETED'
-	                                AND dil.LOANSTATUS  IN ('APPROVED', 'BID ONGOING')"; 
+	                                AND dil.LOANSTATUS  IN ('APPROVED', 'BID ONGOING')
+                                ORDER BY DATEREQUESTED DESC"; 
                 using (conn)
                 {
                     conn.Open();
-                    var invoiceLoans = conn.Query<BidViewModel>(sql, commandType: CommandType.Text).ToList();
+                    var invoiceLoans = conn.Query<BidViewModel>(sql, parameter, commandType: CommandType.Text).ToList();
+
+                    return invoiceLoans;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+        public IEnumerable<BidViewModel> GetLoanBidHistory(int investorId)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                var parameter = new { invid = investorId };
+
+                // diaplay loans that has been approved by the corporate and the loans that bids has been submitted but none has been accepted
+                // do not return data if investor has bidded before
+                string sql = @"SELECT dil.*, di.VENDORNAME, di.PROJECTNAME, di.TOTALEXCLUDINGVAT, di.VENDORCODE,
+                                CASE
+                                    WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_BID WHERE INVESTORID = :invid AND LOANID = dil.ID AND STATUS = 'ACCEPTED') THEN 'Bid Accepted'
+                                    WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_BID WHERE INVESTORID = :invid AND LOANID = dil.ID AND STATUS = 'REJECTED') THEN 'Bid Rejected'
+                                    WHEN EXISTS (SELECT vendoremail FROM DISCOUNTING_BID WHERE INVESTORID = :invid AND LOANID = dil.ID AND STATUS = 'INITIATED') THEN 'Bid Ongoing'
+                                ELSE 'New'
+                                END AS BIDSTATUS
+                                FROM DISCOUNTING_INVOICE_LOAN dil 
+                                LEFT OUTER JOIN DISCOUNTING_INVOICE di ON di.ID = dil.INVOICEID 
+                                LEFT OUTER JOIN DISCOUNTING_BID db ON db.LOANID = dil.ID
+                                WHERE di.INVOICESTATUS = 'COMPLETED'
+	                                AND dil.LOANSTATUS  IN ('BID ACCEPTED')
+                                    AND db.INVESTORID = :invid
+                                ORDER BY DATEREQUESTED DESC"; 
+                using (conn)
+                {
+                    conn.Open();
+                    var invoiceLoans = conn.Query<BidViewModel>(sql, parameter, commandType: CommandType.Text).ToList();
 
                     return invoiceLoans;
                 }
@@ -3915,11 +4091,12 @@ namespace Invoice_Discounting.Services
                 var parameter = new { loanid = loanIdt };
 
                 string sql = @"SELECT * FROM DISCOUNTING_BID
-                               WHERE LOANID = :loanid";
+                               WHERE LOANID = :loanid
+                               ORDER BY ADDDATETIME DESC";
                 using (conn)
                 {
                     conn.Open();
-                    var bids = conn.Query<BidModel>(sql, commandType: CommandType.Text).ToList();
+                    var bids = conn.Query<BidModel>(sql, parameter, commandType: CommandType.Text).ToList();
 
                     return bids;
                 }
@@ -3983,7 +4160,7 @@ namespace Invoice_Discounting.Services
                 
                 string sql = $@"UPDATE DISCOUNTING_INVOICE_LOAN 
 	                        SET LOANSTATUS = 'BID ONGOING'
-	                        WHERE ID = :lid;";
+	                        WHERE ID = :lid";
 
                 using (conn)
                 {
@@ -3998,6 +4175,247 @@ namespace Invoice_Discounting.Services
                 logger.Error(ex);
                 return false;
             }
+        }
+
+        public IEnumerable<Investor> GetAllValidInvestors()
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                string sql = "SELECT * FROM DISCOUNTING_INVESTOR WHERE STATUS = 1 order by COMPANYNAME desc";
+
+                using (conn)
+                {
+                    conn.Open();
+                    var response = conn.Query<Investor>(sql, commandType: CommandType.Text).ToList();
+
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
+        public IEnumerable<InvestorDetails> GetApprovedInvestorsbyInvestorId(int investorId)
+        {
+            return null;
+        }
+
+        public IEnumerable<InvestorDetails> GetApprovedInvestors()
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+
+                string sql = "SELECT * FROM DISCOUNTING_INVESTOR";
+                using (conn)
+                {
+                    conn.Open();
+                    var Investor = conn.Query<InvestorDetails>(sql, commandType: CommandType.Text).ToList();
+
+                    return Investor;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
+        public IEnumerable<InvestorDetailsPending> GetPendingInvestors(string currentuseremail, int investorId)
+        {
+            return null;
+        }
+
+        public IEnumerable<InvestorDetailsPending> GetPendingInvestors(string currentuseremail)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+
+                string sql = "SELECT * FROM DISCOUNTING_INVESTOR_PENDING";
+                using (conn)
+                {
+                    conn.Open();
+                    var InvestorPending = conn.Query<InvestorDetailsPending>(sql, commandType: CommandType.Text).ToList();
+
+                    return InvestorPending;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
+        public List<InvestmentPreferenceList> GetInvestmentPreferenceLists()
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+
+                string sql = "SELECT * FROM DISCOUNTING_INVESTMENTPREFERENCE";
+                using (conn)
+                {
+                    conn.Open();
+                    var InvestmentPreference = conn.Query<InvestmentPreferenceList>(sql, commandType: CommandType.Text).ToList();
+
+                    return InvestmentPreference;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
+        public List<InvestmentRestrictionList> GetInvestmentRestrictionLists()
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+
+                string sql = "SELECT * FROM DISCOUNTING_INVESTMENTRESTRICTION";
+                using (conn)
+                {
+                    conn.Open();
+                    var InvestmentRestriction = conn.Query<InvestmentRestrictionList>(sql, commandType: CommandType.Text).ToList();
+
+                    return InvestmentRestriction;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
+        public int UpdateInsertInvestor(UpdateInvestor investorDetails)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                DynamicParameters investorParams = new DynamicParameters();
+                investorParams.Add("COMPANYNAME", investorDetails.CompanyName);
+                investorParams.Add("PREFEREDUSERNAME", investorDetails.userName);
+                investorParams.Add("HASHEDPASSWORD", investorDetails.hashPassword);
+                investorParams.Add("UNIQUEINVESTORID", investorDetails.UNIQUEINVESTORID);
+                investorParams.Add("ACCOUNTNO", investorDetails.AccountNo);
+                investorParams.Add("PHONENUMBER", investorDetails.PhoneNumber);
+                investorParams.Add("EMAIL", investorDetails.Email);
+                investorParams.Add("LOCATION", investorDetails.Location);
+                investorParams.Add("BANK", investorDetails.BANK);
+                investorParams.Add("FUNDINGCAPACITY", investorDetails.FundingCapacity);
+                investorParams.Add("INVESTMENTPREFERENCES", investorDetails.InvestmentPreferences);
+                investorParams.Add("INVESTMENTRESTRICTIONS", investorDetails.InvestmentRestrictions);
+                investorParams.Add("INVESTMENTEXPERIENCEINYEARS", investorDetails.InvestmentExperienceInYears);
+                investorParams.Add("INTERESTRATE", investorDetails.InterestRate);
+                investorParams.Add("DATECREATED", investorDetails.DATECREATED);
+                investorParams.Add("STATUS", investorDetails.STATUS);
+                investorParams.Add("CREATEDBYNAME", investorDetails.CREATEDBYNAME);
+                investorParams.Add("CREATEDBYEMAIL", investorDetails.CREATEDBYEMAIL);
+                investorParams.Add("UPDATETYPE", investorDetails.UPDATETYPE);
+                investorParams.Add("ACCOUNTNAME", investorDetails.AccountName);
+                investorParams.Add("AUTHORIZERCOMMENT", investorDetails.AUTHORIZERCOMMENT);
+                investorParams.Add("AUTHORIZEREMAIL", investorDetails.AUTHORIZEREMAIL);
+                investorParams.Add("AUTHORIZERNAME", investorDetails.AUTHORIZERNAME);
+
+
+                investorParams.Add("idt", DbType.Int32, direction: ParameterDirection.Output);
+                using (conn)
+                {
+                    conn.Open();
+                    var savedOrUpdatedId = conn.Execute("PR_DISCOUNTING_INVESTOR_PENDING", param: investorParams, commandType: CommandType.StoredProcedure);
+
+                    int investorId = investorParams.Get<int>("idt");
+                    return investorId;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return 0;
+            }
+        }
+
+        public IEnumerable<InvestorDetails> GetApprovedInvestors(int investorId)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+
+                string sql = "SELECT * FROM DISCOUNTING_INVESTOR";
+                using (conn)
+                {
+                    conn.Open();
+                    var Investor = conn.Query<InvestorDetails>(sql, commandType: CommandType.Text).ToList();
+
+                    return Investor;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
+        public bool AuthorizeInvestor(AuthorizeInvestor investor)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                using (conn)
+                {
+                    conn.Open();
+                    int executed = conn.Execute("PR_DISCOUNTING_AUTH_INVESTOR", param: investor, commandType: CommandType.StoredProcedure);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
+        }
+
+        public bool UpdateInvestorStatus(int investorid, bool status)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                char statusChar = status == true ? '1' : '0';
+                var parameter = new { idt = investorid, stat = statusChar };
+
+                string sql = "UPDATE discounting_investor \n" +
+                            "SET status = :stat \n" +
+                            "WHERE ID = :idt ";
+
+                using (conn)
+                {
+                    conn.Open();
+                    conn.Execute(sql, param: parameter, commandType: CommandType.Text);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return false;
+            }
+        }
+
+        public IEnumerable<VendorDetails> GetApprovedVendorsbyCorporateID(int corporateid)
+        {
+            throw new NotImplementedException();
         }
     }
 }
