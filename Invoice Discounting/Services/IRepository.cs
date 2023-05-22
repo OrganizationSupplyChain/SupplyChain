@@ -65,7 +65,7 @@ namespace Invoice_Discounting.Services
         VendorDetails GetVendorbyCorporateId(string corporateID);
 		bool CreateUpdateVendor(UpdateVendor vendor, bool isSingleCorporate);
         bool AuthourizeContract(int responseId, string authStatus, string authorizerEmail, string AuthorizerName);
-		IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode);
+		IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode, bool isHistory);
 		IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId);
 		IEnumerable<BidViewModel> GetLoanBidHistory(int investorId);
         IEnumerable<BidModel> GetBidsByLoanId(int loanIdt);

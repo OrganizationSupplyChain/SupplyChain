@@ -109,16 +109,20 @@ namespace Invoice_Discounting.Controllers
             }
 
             // Fetch all approved loans awaiting bid
-            IEnumerable<BidViewModel> model = _repo.GetLoanBidListByVendor(vendorCode);
+            IEnumerable<BidViewModel> model = _repo.GetLoanBidListByVendor(vendorCode, false);
             return View(model);
 
         }
 
-        public IActionResult GetBidListModal(int loanId)
+        public IActionResult GetBidListModal(int loanId, bool isHistory)
         {
+            BidModalViewModel modalVM = new BidModalViewModel();
             IEnumerable<BidModel> bidList = _repo.GetBidsByLoanId(loanId);
 
-            return PartialView("_BidList", bidList);
+            modalVM.BidDetails = bidList;
+            modalVM.IsHistory = isHistory;
+
+            return PartialView("_BidList", modalVM);
         }
 
         public IActionResult AcceptBid(int bidId, int loanId, int invoiceId)
@@ -137,6 +141,20 @@ namespace Invoice_Discounting.Controllers
             }
 
             return RedirectToAction("VendorIndex");
+        }
+
+        public IActionResult VendorBidHistory()
+        {
+            string vendorCode = HttpContext.Session.GetString("VendorId");
+
+            if (string.IsNullOrEmpty(vendorCode))
+            {
+                return RedirectToAction("Index", "Login", new { errorMsg = "Invalid Access" });
+            }
+
+            // Fetch all completed bid
+            IEnumerable<BidViewModel> model = _repo.GetLoanBidListByVendor(vendorCode, true);
+            return View(model);
         }
     }
 }

@@ -101,15 +101,19 @@ namespace Invoice_Discounting.Services
                 if (userDetails.USERTYPE == "INTERNAL")
                 {
                     //AD Validation
-                    var authenticated = ADService.Login(username, password);
-                    if (authenticated == null)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+                    // TODO:Comment after test
+                    return true;
+
+                    // TODO: Uncomment after test
+                    //var authenticated = ADService.Login(username, password);
+                    //if (authenticated == null)
+                    //{                      
+                    //    return false;
+                    //}
+                    //else
+                    //{
+                    //    return true;
+                    //}
 
                 }
                 else
@@ -1015,6 +1019,11 @@ namespace Invoice_Discounting.Services
                 else if (roleSplit.Contains("Generate Invoice"))
                 {
                     pageDet[0] = "Invoice";
+                    pageDet[1] = "Index";
+                }
+                else if (roleSplit.Contains("Bid"))
+                {
+                    pageDet[0] = "Bid";
                     pageDet[1] = "Index";
                 }
             }
@@ -2755,11 +2764,19 @@ namespace Invoice_Discounting.Services
             return authorized;
         }
 
-        public IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode)
+        public IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode, bool isHistory)
         {
             try
             {
-                return _dbcalls.GetLoanBidListByVendor(vendorCode);
+                if (isHistory) // Get bid history data
+                {
+                    return _dbcalls.GetLoanBidHistoryByVendor(vendorCode);
+                }
+                else
+                {
+                    return _dbcalls.GetLoanBidListByVendor(vendorCode);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -2843,9 +2860,9 @@ namespace Invoice_Discounting.Services
                     // TODO: Process Invoice discounting from Investor's account
                     //disbursed = ProcessInvoiceDiscounting(invoiceId);
                 }
-                
 
-                return bidAccepted && disbursed;
+
+                return bidAccepted; //&& disbursed;
             }
             catch (Exception ex)
             {

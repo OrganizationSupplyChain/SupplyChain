@@ -140,7 +140,9 @@ namespace Invoice_Discounting.Services
         bool UpdateLogonStatusbyUsername(string username);
 		bool IsSingleCorporate(int corporateId);
 		IEnumerable<BidViewModel> GetLoanBidListByVendor(string vendorCode);
-		IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId);
+		IEnumerable<BidViewModel> GetLoanBidHistoryByVendor(string vendorCode);
+
+        IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId);
 		IEnumerable<BidViewModel> GetLoanBidHistory(int investorId);
         IEnumerable<BidModel> GetBidByLoanId(int loanIdt);
         bool PlaceBid(InsertBid bidDetails);

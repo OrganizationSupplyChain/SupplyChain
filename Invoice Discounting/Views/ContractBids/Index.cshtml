@@ -76,7 +76,24 @@
 
 
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.ResponseStatus)
+                                                @if (item.ResponseStatus == "Awarded")
+                                                {
+                                                    <div class="status alert alert-success mb-0 py-1" role="alert" style="width:120px">
+                                                        <label>Awarded</label>
+                                                    </div>
+                                                }
+                                                else if (item.ResponseStatus == "Ongoing")
+                                                {
+                                                    <div class="status alert alert-primary mb-0 py-1" role="alert" style="width:120px">
+                                                        <label>In Progress</label>
+                                                    </div>
+                                                }
+                                                else if (item.ResponseStatus == "Rejected")
+                                                {
+                                                    <div class="status alert alert-danger mb-0 py-1" role="alert" style="width:120px">
+                                                        <label>Rejected</label>
+                                                    </div>
+                                                }
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.ContractNumber)

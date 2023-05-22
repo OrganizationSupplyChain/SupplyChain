@@ -16,12 +16,14 @@ namespace Invoice_Discounting.Services
 		private readonly IConfiguration _config;
 		private readonly string baseUrl;
 		private readonly string baseUrl1;
+		private readonly string emailBaseUrl;
 
 		public ApiImplementation(IConfiguration config)
 		{
 			_config = config;
 			baseUrl = _config["APISettings:BaseURL"];
 			baseUrl1 = _config["APISettings:BaseURL1"];
+			emailBaseUrl = _config["APISettings:EmailBaseURL"];
 		}
 
 		public ApiImplementation()
@@ -128,7 +130,7 @@ namespace Invoice_Discounting.Services
 				req.From = "no-reply@accessbankplc.com";
 				req.DisplayAsHtml = true;
 				req.DisplayName = "SupplyChain";
-				string serviceURL = $"{baseUrl}/api/EmailRelay/SendEmail";
+				string serviceURL = $"{emailBaseUrl}/api/EmailRelay/SendEmail";
 				var client = new RestClient(serviceURL);
 				var request = new RestRequest(Method.POST);
 				var reqbody = JsonConvert.SerializeObject(req);

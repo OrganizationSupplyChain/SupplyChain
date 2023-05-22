@@ -7,7 +7,7 @@
     <!-- Page Heading -->
     <div class="row">
         <div class="col-12 d-flex justify-content-between">
-            <h3 class="page-title">Loan Request</h3>
+            <h3 class="page-title">Loan Request History</h3>
             <p>@DateTime.UtcNow.ToShortDateString()</p>
 
         </div>
@@ -87,21 +87,21 @@
                                                 @Html.DisplayFor(modelItem => item.daterequested)
                                             </td>
                                             <td>
-                                                @if (item.loanstatus == "APPROVED")
+                                                @if (item.loanstatus == "BID ACCEPTED")
                                                 {
                                                     <div class="status alert alert-success mb-0 py-1" role="alert">
-                                                        <label>Approved</label>
+                                                        <label>Bid Accepted</label>
                                                     </div>
                                                 }
                                                 else
                                                 {
                                                     <div class="status alert alert-warning mb-0 py-1" role="alert">
-                                                        <label>BID ONGOING</label>
+                                                        <label></label>
                                                     </div>
                                                 }
                                             </td>
                                             <td>
-                                                @Html.ActionLink("View Bid", "GetBidListModal", new { loanId = item.id, isHistory = false }, new { @class = "link blue auth", @id = "lnkplacebid" })
+                                                @Html.ActionLink("View Bid", "GetBidListModal", new { loanId = item.id, isHistory = true }, new { @class = "link blue auth", @id = "lnkplacebid" })
                                             </td>
 
                                         </tr>
@@ -166,9 +166,10 @@
 
 
         $("#btnViewHistory").on('click', function () {
-            window.location.href = '@Url.Action("VendorBidHistory", "Bid")';
+            window.location.href = '@Url.Action("BidHistory", "Bid")';
         });
     </script>
 }
+
 
 

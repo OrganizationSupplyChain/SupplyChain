@@ -81,5 +81,12 @@ namespace Invoice_Discounting.Utility
             ACCEPTED = 1,
             REJECTED = 2,
         }
+
+        public enum ContractResponseStatus
+        {
+            Ongoing = 0,
+            Awarded = 1,
+            Rejected = 2,
+        }
     }
 }

@@ -53,5 +53,6 @@ namespace Invoice_Discounting.Models
 		public string VENDORNAME { get; set; }
 		public string CORPORATEUSERSCORP { get; set; }
 		public string VENDORUSERSCORP { get; set; }
+		public string INVESTORID { get; set; }
 	}
 }

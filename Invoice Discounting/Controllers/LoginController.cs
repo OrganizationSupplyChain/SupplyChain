@@ -149,6 +149,11 @@ namespace Invoice_Discounting.Controllers
                     }
                         
                 }
+                else if(userDetails.USERCLASS == UserClass.INVESTOR.ToString())
+                {
+                    int investorId = string.IsNullOrWhiteSpace(userDetails.INVESTORID) ? 0 : int.Parse(userDetails.INVESTORID);
+                    HttpContext.Session.SetInt32("InvestorId", investorId);
+                }
             }
             
             //Authenticate user based on their user type
@@ -162,7 +167,8 @@ namespace Invoice_Discounting.Controllers
                 HttpContext.Session.SetString("UserEmail", userDetails.EMAIL);
                 HttpContext.Session.SetInt32("corporateId", corporateId);
                 HttpContext.Session.SetInt32("RoleId", userDetails.ROLEID);
-
+                
+               
                 //HttpContext.Session.SetString("RoleName", userDetails.ROLENAME);
                 bool sessionSet = SetSessionByRole(userDetails.ROLEID);
                 if (!sessionSet)

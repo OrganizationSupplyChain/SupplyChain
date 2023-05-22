@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BidModel>
+﻿@model BidModalViewModel
 
 
     @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
@@ -33,7 +33,7 @@
                         @{
                             int j = 1;
                         }
-                        @if (Model == null || Model.Count() == 0)
+                        @if (Model == null || Model.BidDetails == null || Model.BidDetails.Count() == 0)
                         {
                             <tr>
                                 <td colspan="4">No Record Found</td>
@@ -41,7 +41,7 @@
                         }
                         else
                         {
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.BidDetails)
                             {
                                 <tr>
                                     @*<td>
@@ -59,9 +59,30 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ADDDATETIME)
                                     </td>
-                                    <td>
-                                        @Html.ActionLink("Accept", "AcceptBid", new { bidId = item.ID, loanId = item.LOANID, invoiceId = item.INVOICEID}, new { @class = "link blue auth", @id = "lnkacceptbid" })
-                                    </td>
+                                    @if (!Model.IsHistory)
+                                    {
+                                        <td>
+                                            @Html.ActionLink("Accept", "AcceptBid", new { bidId = item.ID, loanId = item.LOANID, invoiceId = item.INVOICEID}, new { @class = "link blue auth", @id = "lnkacceptbid" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @if (item.STATUS == "ACCEPTED")
+                                            {
+                                                <div class="status alert alert-success mb-0 py-1" role="alert">
+                                                    <label>Accepted</label>
+                                                </div>
+                                            }
+                                            else if (item.STATUS == "REJECTED")
+                                            {
+                                                <div class="status alert alert-danger mb-0 py-1" role="alert">
+                                                    <label>Rejected</label>
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+
 
                                 </tr>
                             }

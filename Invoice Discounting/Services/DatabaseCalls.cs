@@ -259,7 +259,7 @@ namespace Invoice_Discounting.Services
                     try
                     {
                         OracleConnection conn = new OracleConnection(connString);
-                        string sql = "SELECT * FROM DISCOUNTING_ROLE where rolename in ('RelationshipManager','AccessAdminRep','VendorAndCorporate','Corporate') order by createddate desc";
+                        string sql = "SELECT * FROM DISCOUNTING_ROLE where rolename in ('RelationshipManager','AccessAdminRep','VendorAndCorporate','Corporate','Investor') order by createddate desc";
                         using (conn)
                         {
                             conn.Open();
@@ -532,11 +532,12 @@ namespace Invoice_Discounting.Services
             try
             {
                 OracleConnection conn = new OracleConnection(connString);
-                string sql = $"SELECT A.VENDORNAME,A.RESPONSESTATUS, C.CORPORATENAME, C.UNIQUECORPORATEID, B.CONTRACTNUMBER , B.CONTRACTNAME FROM DISCOUNTING_CONTRACT_RESPONSE A LEFT OUTER JOIN DISCOUNTING_CONTRACT B ON B.ID = A.CONTRACTID LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS C ON C.ID = B.CORPORATEID  WHERE A.VENDOREMAIL  in ('{vendoremail}')";
+                var parameter = new { vemail = vendoremail };
+                string sql = @"SELECT A.VENDORNAME,A.RESPONSESTATUS, C.CORPORATENAME, C.UNIQUECORPORATEID, B.CONTRACTNUMBER , B.CONTRACTNAME FROM DISCOUNTING_CONTRACT_RESPONSE A LEFT OUTER JOIN DISCOUNTING_CONTRACT B ON B.ID = A.CONTRACTID LEFT OUTER JOIN DISCOUNTING_CORPORATEDETAILS C ON C.ID = B.CORPORATEID  WHERE A.VENDOREMAIL  in (:vemail)";
                 using (conn)
                 {
                     conn.Open();
-                    List<VendorContractBidsDetails> vendorbidslist = conn.Query<VendorContractBidsDetails>(sql, commandType: CommandType.Text).ToList();
+                    List<VendorContractBidsDetails> vendorbidslist = conn.Query<VendorContractBidsDetails>(sql, parameter, commandType: CommandType.Text).ToList();
 
                     return vendorbidslist;
                 }
@@ -1808,7 +1809,7 @@ namespace Invoice_Discounting.Services
                 using (conn)
                 {
                     conn.Open();
-                    List<notification> vendoList = conn.Query<notification>(sql, commandType: CommandType.Text).ToList();
+                    List<notification> vendoList = conn.Query<notification>(sql, parameter, commandType: CommandType.Text).ToList();
 
                     return vendoList;
                 }
@@ -4010,6 +4011,35 @@ namespace Invoice_Discounting.Services
             }
         }
 
+        public IEnumerable<BidViewModel> GetLoanBidHistoryByVendor(string vendorCode)
+        {
+            try
+            {
+                OracleConnection conn = new OracleConnection(connString);
+                var parameter = new { vendorid = vendorCode };
+
+                // diaplay loans that has been approved by the corporate and the loans that bids has been submitted but none has been accepted
+                string sql = @"SELECT dil.*, di.VENDORNAME, di.PROJECTNAME, di.TOTALEXCLUDINGVAT, di.VENDORCODE 
+                                FROM DISCOUNTING_INVOICE_LOAN dil 
+                                LEFT OUTER JOIN DISCOUNTING_INVOICE di ON di.ID = dil.INVOICEID 
+                                WHERE di.INVOICESTATUS = 'COMPLETED'
+	                                AND dil.LOANSTATUS IN ('BID ACCEPTED')
+	                                AND di.VENDORCODE = :vendorid";
+                using (conn)
+                {
+                    conn.Open();
+                    var invoiceLoans = conn.Query<BidViewModel>(sql, parameter, commandType: CommandType.Text).ToList();
+
+                    return invoiceLoans;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                return null;
+            }
+        }
+
         public IEnumerable<BidViewModel> GetAllAvailableLoanBidList(int investorId)
         {
             try
@@ -4332,7 +4362,7 @@ namespace Invoice_Discounting.Services
                 using (conn)
                 {
                     conn.Open();
-                    var savedOrUpdatedId = conn.Execute("PR_DISCOUNTING_INVESTOR_PENDING", param: investorParams, commandType: CommandType.StoredProcedure);
+                    var savedOrUpdatedId = conn.Execute("PR_DISCOUNTING_INVESTOR_PEND", param: investorParams, commandType: CommandType.StoredProcedure);
 
                     int investorId = investorParams.Get<int>("idt");
                     return investorId;
