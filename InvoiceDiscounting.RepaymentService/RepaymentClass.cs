@@ -19,7 +19,7 @@ namespace InvoiceDiscounting.RepaymentService
             repo.ProcessInvoiceDiscountingRepayment();
 
             //process reverse factoring repayment
-            repo.ProcessInvoiceDiscountingRepayment();
+            repo.ProcessReverseFactoringRepayment();
         }
 
     }
